@@ -3,161 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examples • learning-grok</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>INDEX — GROK FIELD LOG</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
-        
+        :root {
+            --bg: #050505;
+            --paper: #0f0f0f;
+            --text: #e5e5e5;
+            --text-muted: #737373;
+            --accent: #22d3ee;
+            --accent-warm: #eab308;
+            --border: #262626;
+            --grid: rgba(255,255,255,0.032);
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            --font-body: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+        }
+
         body {
-            font-family: 'Inter', system_ui, sans-serif;
-        }
-        
-        .font-display {
-            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
-        }
-
-        .example-card {
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .example-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            margin: 0;
+            background-color: var(--bg);
+            background-image: 
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 22px 22px;
+            color: var(--text);
+            font-family: var(--font-body);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .example-card:active {
-            transform: scale(0.985);
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 42px 24px 80px;
+        }
+
+        .registry-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .registry-title {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .registry-count {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--accent);
+        }
+
+        .entry {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            margin-bottom: 13px;
+            padding: 18px 22px 16px;
+            transition: border-color 0.15s ease, background 0.15s ease;
+            position: relative;
+        }
+
+        .entry:hover {
+            border-color: #3f3f3f;
+            background: #121212;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1px;
+            margin-bottom: 9px;
+            color: var(--text-muted);
+        }
+
+        .entry-sn {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .entry-title {
+            font-family: var(--font-mono);
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            line-height: 1.05;
+        }
+
+        .entry-desc {
+            font-size: 13.2px;
+            color: var(--text-muted);
+            max-width: 46ch;
+            margin-bottom: 11px;
+        }
+
+        .entry-footer {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .entry-tag {
+            padding: 1px 7px;
+            border: 1px solid var(--border);
+            font-size: 9px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 28px;
+            transition: color 0.1s ease;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+        }
+
+        .page-label {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-200">
-    <div class="max-w-3xl mx-auto px-6 py-12">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-10">
-            <div class="flex items-center gap-x-4">
-                <a href="../" class="flex items-center gap-x-3 group">
-                    <div class="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                        <i class="fa-solid fa-graduation-cap text-white"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-4xl font-semibold tracking-tighter text-white group-hover:text-blue-400 transition-colors">learning-grok</h1>
-                        <p class="text-slate-500 text-sm -mt-0.5">Home</p>
-                    </div>
-                </a>
-                <div class="hidden sm:block h-6 w-px bg-slate-800"></div>
-                <div class="text-sm text-slate-400 hidden sm:block">Examples</div>
+<body>
+    <div class="container">
+        <a href="../" class="back-link">
+            <i class="fa-solid fa-arrow-left" style="font-size:9px"></i> 
+            <span>RETURN TO ARCHIVE</span>
+        </a>
+
+        <div class="registry-header">
+            <div>
+                <div class="page-label">GROK FIELD LOG</div>
+                <div style="font-family: var(--font-mono); font-size: 22px; font-weight: 600; letter-spacing: -0.3px;">SPECIMEN INDEX</div>
             </div>
-            <a href="https://github.com/qanuj/learning-grok" target="_blank"
-               class="inline-flex items-center gap-x-2 px-4 py-2 text-sm bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-2xl transition-colors">
-                <i class="fa-brands fa-github"></i>
-                <span>View on GitHub</span>
-            </a>
+            <div class="registry-count">3 SPECIMENS • ALL OPERATIONAL</div>
         </div>
 
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold tracking-tight mb-2">Examples</h2>
-            <p class="text-slate-400">A collection of standalone, deployable demos built with pure web technologies.</p>
-        </div>
-
-        <!-- Examples Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Calculator -->
-            <a href="calculator/" 
-               class="example-card group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl p-6 flex gap-5 items-start">
-                <div class="mt-1 w-12 h-12 flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-inner">
-                    <i class="fa-solid fa-calculator text-white text-3xl"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-x-2">
-                        <h3 class="text-xl font-semibold group-hover:text-white transition-colors">Calculator</h3>
-                        <span class="text-[10px] px-2 py-px rounded bg-emerald-950 text-emerald-400 font-medium tracking-wide">LIVE</span>
-                    </div>
-                    <p class="text-sm text-slate-400 mt-1 leading-relaxed">
-                        Fully functional calculator built with pure HTML, CSS &amp; vanilla JavaScript. 
-                        Supports keyboard input, percentages, and runs 100% client-side.
-                    </p>
-                    <div class="mt-4 flex items-center gap-x-3 text-xs">
-                        <div class="flex items-center gap-x-1.5 text-emerald-400">
-                            <i class="fa-solid fa-globe"></i>
-                            <span class="font-medium">GitHub Pages ready</span>
-                        </div>
-                        <div class="text-slate-600">•</div>
-                        <div class="text-slate-500">No build step</div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Tic Tac Toe -->
-            <a href="tic-tac-toe/" 
-               class="example-card group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl p-6 flex gap-5 items-start">
-                <div class="mt-1 w-12 h-12 flex-shrink-0 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-2xl flex items-center justify-center shadow-inner">
-                    <i class="fa-solid fa-gamepad text-white text-3xl"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-x-2">
-                        <h3 class="text-xl font-semibold group-hover:text-white transition-colors">Tic Tac Toe</h3>
-                        <span class="text-[10px] px-2 py-px rounded bg-emerald-950 text-emerald-400 font-medium tracking-wide">LIVE</span>
-                    </div>
-                    <p class="text-sm text-slate-400 mt-1 leading-relaxed">
-                        Classic 3×3 with a perfect AI opponent. Uses the Minimax algorithm so the computer 
-                        will never lose — only draws or wins (when you slip up).
-                    </p>
-                    <div class="mt-4 flex items-center gap-x-3 text-xs">
-                        <div class="flex items-center gap-x-1.5 text-emerald-400">
-                            <i class="fa-solid fa-globe"></i>
-                            <span class="font-medium">GitHub Pages ready</span>
-                        </div>
-                        <div class="text-slate-600">•</div>
-                        <div class="text-slate-500">Single file • Unbeatable</div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- To-Do List -->
-            <a href="todo-list/" 
-               class="example-card group bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl p-6 flex gap-5 items-start">
-                <div class="mt-1 w-12 h-12 flex-shrink-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-inner">
-                    <i class="fa-solid fa-list-check text-white text-3xl"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-x-2">
-                        <h3 class="text-xl font-semibold group-hover:text-white transition-colors">To-Do List</h3>
-                        <span class="text-[10px] px-2 py-px rounded bg-emerald-950 text-emerald-400 font-medium tracking-wide">LIVE</span>
-                    </div>
-                    <p class="text-sm text-slate-400 mt-1 leading-relaxed">
-                        Fast, beautiful to-do app with local persistence, drag-to-reorder, inline editing, 
-                        filters, and keyboard shortcuts. Everything in one file.
-                    </p>
-                    <div class="mt-4 flex items-center gap-x-3 text-xs">
-                        <div class="flex items-center gap-x-1.5 text-emerald-400">
-                            <i class="fa-solid fa-globe"></i>
-                            <span class="font-medium">GitHub Pages ready</span>
-                        </div>
-                        <div class="text-slate-600">•</div>
-                        <div class="text-slate-500">Drag &amp; drop • Edit</div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Placeholder for future -->
-            <div class="example-card bg-slate-900/60 border border-dashed border-slate-800 hover:border-slate-700 rounded-3xl p-6 flex gap-5 items-start opacity-60 cursor-not-allowed">
-                <div class="mt-1 w-12 h-12 flex-shrink-0 bg-slate-800 rounded-2xl flex items-center justify-center">
-                    <i class="fa-solid fa-plus text-slate-500 text-2xl"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="text-xl font-semibold text-slate-400">More coming soon</h3>
-                    <p class="text-sm text-slate-500 mt-1 leading-relaxed">
-                        New standalone demos will be added here.
-                    </p>
-                </div>
+        <!-- Specimen 01 -->
+        <a href="calculator/" class="entry">
+            <div class="entry-header">
+                <div><span class="entry-sn">SPECIMEN-01</span> / ARITHMETIC</div>
+                <div>REV 02 • LIVE</div>
             </div>
-        </div>
+            <div class="entry-title">PRECISION CALCULATOR</div>
+            <div class="entry-desc">Full-featured arithmetic engine. Chaining operations, keyboard control, percentage, clipboard. Zero state persistence.</div>
+            <div class="entry-footer">
+                <div class="entry-tag">16 KEYS</div>
+                <div class="entry-tag">4 OPERATORS</div>
+                <div class="entry-tag">KEYBOARD</div>
+            </div>
+        </a>
 
-        <div class="mt-12 pt-8 border-t border-slate-800 text-xs text-center text-slate-600">
-            All examples are designed to be deployed instantly with GitHub Pages.<br>
-            Clone → commit → push → enable Pages (root / main branch).
+        <!-- Specimen 02 -->
+        <a href="tic-tac-toe/" class="entry">
+            <div class="entry-header">
+                <div><span class="entry-sn">SPECIMEN-02</span> / STRATEGY</div>
+                <div>REV 01 • LIVE</div>
+            </div>
+            <div class="entry-title">STRATEGIC MATRIX</div>
+            <div class="entry-desc">3×3 grid with perfect Minimax opponent. The system cannot lose. Keyboard support (1-9, R). Scores persist locally.</div>
+            <div class="entry-footer">
+                <div class="entry-tag">MINIMAX</div>
+                <div class="entry-tag">9 CELLS</div>
+                <div class="entry-tag">PERSISTENT</div>
+            </div>
+        </a>
+
+        <!-- Specimen 03 -->
+        <a href="todo-list/" class="entry">
+            <div class="entry-header">
+                <div><span class="entry-sn">SPECIMEN-03</span> / LOGISTICS</div>
+                <div>REV 01 • LIVE</div>
+            </div>
+            <div class="entry-title">TASK VECTOR</div>
+            <div class="entry-desc">High-precision task ledger. Drag to reorder entries. Inline editing. Filters. All state survives browser sessions via localStorage.</div>
+            <div class="entry-footer">
+                <div class="entry-tag">DRAG</div>
+                <div class="entry-tag">EDIT</div>
+                <div class="entry-tag">PERSISTENT</div>
+            </div>
+        </a>
+
+        <div style="margin-top: 52px; font-family: var(--font-mono); font-size: 9px; color: #52525b; letter-spacing: 0.5px; text-align: center;">
+            ALL SPECIMENS ARE PURE SINGLE-FILE HTML • NO EXTERNAL RUNTIME DEPENDENCIES
         </div>
     </div>
 </body>

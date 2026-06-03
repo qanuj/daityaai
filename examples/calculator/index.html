@@ -3,278 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>CALC-01 — PRECISION ARITHMETIC ENGINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
-        
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --display: #0f172a;
-            --text: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --btn: #334155;
-            --btn-hover: #475569;
-            --btn-active: #64748b;
-            --accent: #3b82f6;
-            --operator: #f59e0b;
-            --equals: #22c55e;
-        }
-        
-        body {
-            font-family: 'Inter', system_ui, sans-serif;
-        }
-        
-        .font-display {
-            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
-            font-weight: 600;
+            --bg: #050505;
+            --panel: #0a0a0a;
+            --text: #e5e5e5;
+            --text-muted: #737373;
+            --accent: #22d3ee;
+            --accent-warm: #eab308;
+            --success: #4ade80;
+            --border: #262626;
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            --font-body: 'Instrument Sans', system-ui, sans-serif;
         }
 
-        .calculator {
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4),
-                        0 10px 10px -5px rgb(0 0 0 / 0.2);
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        body {
+            margin: 0;
+            background: var(--bg);
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+            background-size: 18px 18px;
+            color: var(--text);
+            font-family: var(--font-body);
+            padding: 24px 16px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .calculator:hover {
-            transform: translateY(-2px);
+
+        .instrument {
+            width: 100%;
+            max-width: 380px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.6);
+        }
+
+        .instrument-header {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            padding: 9px 14px 8px;
+            background: #050505;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        .instrument-header .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--success);
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px rgba(74,222,128,.2);
+        }
+
+        .display-wrapper {
+            padding: 14px 16px 10px;
+            background: #050505;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .display-label {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            padding-left: 2px;
         }
 
         .display {
-            font-variant-numeric: tabular-nums;
-            font-feature-settings: "tnum";
-            letter-spacing: -0.02em;
-        }
-
-        .calc-btn {
-            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: var(--font-mono);
+            background: #0a0a0a;
+            border: 1px solid #1f1f1f;
+            padding: 12px 14px;
+            min-height: 58px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            font-size: 28px;
             font-weight: 500;
-            user-select: none;
-        }
-        
-        .calc-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .calc-btn.number {
-            background-color: #334155;
-            color: #f1f5f9;
-        }
-        
-        .calc-btn.number:hover {
-            background-color: #475569;
-        }
-        
-        .calc-btn.operator {
-            background-color: #f59e0b;
-            color: white;
-            font-weight: 600;
-        }
-        
-        .calc-btn.operator:hover {
-            background-color: #d97706;
-        }
-        
-        .calc-btn.equals {
-            background-color: #22c55e;
-            color: white;
-            font-weight: 600;
-        }
-        
-        .calc-btn.equals:hover {
-            background-color: #16a34a;
-        }
-        
-        .calc-btn.utility {
-            background-color: #475569;
-            color: #e2e8f0;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .calc-btn.utility:hover {
-            background-color: #64748b;
-        }
-
-        .display-value {
-            font-size: 3rem;
-            line-height: 1;
-            transition: all 0.1s ease;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: right;
+            overflow: hidden;
+            word-break: break-all;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
         }
 
         .history {
-            font-size: 0.75rem;
-            color: #64748b;
-            min-height: 1rem;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: right;
+            min-height: 14px;
+            padding: 0 2px 4px;
+            letter-spacing: 0.5px;
         }
 
-        .key-hint {
-            font-size: 10px;
-            opacity: 0.5;
-            margin-top: 2px;
+        .keypad {
+            padding: 10px;
+            background: #050505;
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+
+        .key {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            height: 48px;
+            background: #121212;
+            border: 1px solid #262626;
+            color: #d4d4d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.06s ease;
+            font-weight: 500;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+        }
+
+        .key:hover {
+            background: #1a1a1a;
+            border-color: #3f3f3f;
+        }
+
+        .key:active {
+            transform: translateY(1px);
+            box-shadow: none;
+            background: #0f0f0f;
+        }
+
+        .key.operator {
+            background: #1c2526;
+            color: var(--accent-warm);
+            border-color: #3f3f3f;
+            font-size: 17px;
+        }
+
+        .key.equals {
+            background: #052e16;
+            color: var(--success);
+            border-color: #166534;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .key.utility {
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            background: #171717;
+        }
+
+        .telemetry {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            padding: 8px 14px 10px;
+            background: #050505;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .reg-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: #52525b;
+            text-align: center;
+            padding-top: 18px;
         }
     </style>
 </head>
-<body class="bg-slate-950 flex items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-[380px]">
+<body>
+    <div class="instrument">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-6 px-1">
-            <div class="flex items-center gap-x-3">
-                <div class="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-inner">
-                    <i class="fa-solid fa-calculator text-white text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-semibold text-white tracking-tighter">Calculator</h1>
-                    <p class="text-slate-500 text-sm -mt-1">Pure HTML • Works offline</p>
-                </div>
+        <div class="instrument-header">
+            <div>
+                <span style="color:#22d3ee">CALC-01</span> / PRECISION ARITHMETIC ENGINE
             </div>
-            <div class="flex items-center gap-x-2">
-                <div class="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-2xl text-xs flex items-center gap-x-1.5 text-slate-400">
-                    <i class="fa-solid fa-globe fa-sm"></i>
-                    <span class="font-medium">GitHub Pages</span>
-                </div>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>OPERATIONAL</span>
             </div>
         </div>
 
-        <!-- Calculator -->
-        <div class="calculator bg-slate-900 border border-slate-800 rounded-3xl p-2 shadow-2xl w-full">
-            <!-- Display -->
-            <div class="bg-slate-950 rounded-3xl p-6 mb-2 border border-slate-800">
-                <div id="history" class="history font-mono text-right mb-1 pr-1 select-none"></div>
-                <div id="display" 
-                     class="display text-white display-value text-right font-display min-h-[72px] flex items-center justify-end overflow-hidden break-all"
-                     style="font-size: 3rem; line-height: 1.05;">
-                    0
-                </div>
-            </div>
+        <!-- Display -->
+        <div class="display-wrapper">
+            <div class="display-label">OUTPUT REGISTER</div>
+            <div id="history" class="history"></div>
+            <div id="display" class="display">0</div>
+        </div>
 
-            <!-- Buttons -->
-            <div class="grid grid-cols-4 gap-2 p-2">
+        <!-- Keypad -->
+        <div class="keypad">
+            <div class="keypad-grid">
                 <!-- Row 1 -->
-                <button onclick="clearAll()" 
-                        class="calc-btn utility col-span-1 h-14 rounded-2xl text-sm flex flex-col items-center justify-center active:scale-[0.96]">
-                    <span>AC</span>
-                    <span class="key-hint">Esc</span>
-                </button>
-                <button onclick="clearEntry()" 
-                        class="calc-btn utility col-span-1 h-14 rounded-2xl text-sm flex flex-col items-center justify-center active:scale-[0.96]">
-                    <span>CE</span>
-                    <span class="key-hint">Del</span>
-                </button>
-                <button onclick="backspace()" 
-                        class="calc-btn utility col-span-1 h-14 rounded-2xl text-lg flex items-center justify-center active:scale-[0.96]">
-                    <i class="fa-solid fa-delete-left"></i>
-                </button>
-                <button onclick="handleOperator('/')" 
-                        class="calc-btn operator col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">
-                    <i class="fa-solid fa-divide fa-sm"></i>
-                </button>
+                <div class="key utility" onclick="clearAll()">AC</div>
+                <div class="key utility" onclick="clearEntry()">CE</div>
+                <div class="key utility" onclick="backspace()"><i class="fa-solid fa-delete-left"></i></div>
+                <div class="key operator" onclick="handleOperator('/')">÷</div>
 
                 <!-- Row 2 -->
-                <button onclick="appendNumber('7')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">7</button>
-                <button onclick="appendNumber('8')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">8</button>
-                <button onclick="appendNumber('9')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">9</button>
-                <button onclick="handleOperator('*')" 
-                        class="calc-btn operator col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <div class="key" onclick="appendNumber('7')">7</div>
+                <div class="key" onclick="appendNumber('8')">8</div>
+                <div class="key" onclick="appendNumber('9')">9</div>
+                <div class="key operator" onclick="handleOperator('*')">×</div>
 
                 <!-- Row 3 -->
-                <button onclick="appendNumber('4')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">4</button>
-                <button onclick="appendNumber('5')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">5</button>
-                <button onclick="appendNumber('6')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">6</button>
-                <button onclick="handleOperator('-')" 
-                        class="calc-btn operator col-span-1 h-14 rounded-2xl text-3xl flex items-center justify-center active:scale-[0.96]">
-                    <span class="font-light">−</span>
-                </button>
+                <div class="key" onclick="appendNumber('4')">4</div>
+                <div class="key" onclick="appendNumber('5')">5</div>
+                <div class="key" onclick="appendNumber('6')">6</div>
+                <div class="key operator" onclick="handleOperator('-')">−</div>
 
                 <!-- Row 4 -->
-                <button onclick="appendNumber('1')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">1</button>
-                <button onclick="appendNumber('2')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">2</button>
-                <button onclick="appendNumber('3')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">3</button>
-                <button onclick="handleOperator('+')" 
-                        class="calc-btn operator col-span-1 h-14 rounded-2xl text-3xl flex items-center justify-center active:scale-[0.96]">
-                    <span class="font-light">+</span>
-                </button>
+                <div class="key" onclick="appendNumber('1')">1</div>
+                <div class="key" onclick="appendNumber('2')">2</div>
+                <div class="key" onclick="appendNumber('3')">3</div>
+                <div class="key operator" onclick="handleOperator('+')">+</div>
 
                 <!-- Row 5 -->
-                <button onclick="appendNumber('0')" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">0</button>
-                <button onclick="appendDecimal()" class="calc-btn number col-span-1 h-14 rounded-2xl text-2xl flex items-center justify-center active:scale-[0.96]">.</button>
-                <button onclick="toggleSign()" 
-                        class="calc-btn utility col-span-1 h-14 rounded-2xl text-xl flex items-center justify-center active:scale-[0.96]">
-                    <i class="fa-solid fa-plus-minus"></i>
-                </button>
-                <button onclick="calculate()" 
-                        class="calc-btn equals col-span-1 h-14 rounded-2xl text-3xl flex items-center justify-center active:scale-[0.96]">
-                    <i class="fa-solid fa-equals"></i>
-                </button>
-            </div>
-
-            <!-- Footer info -->
-            <div class="px-3 pt-3 pb-2 flex items-center justify-between text-[10px] text-slate-600">
-                <div class="flex items-center gap-x-1">
-                    <i class="fa-solid fa-keyboard text-slate-700"></i>
-                    <span class="font-mono">Keyboard supported</span>
-                </div>
-                <div onclick="showShortcuts()" class="cursor-pointer hover:text-slate-400 transition-colors flex items-center gap-x-1">
-                    <span>Shortcuts</span>
-                    <i class="fa-solid fa-question-circle"></i>
-                </div>
+                <div class="key" onclick="appendNumber('0')">0</div>
+                <div class="key" onclick="appendDecimal()">.</div>
+                <div class="key utility" onclick="toggleSign()">±</div>
+                <div class="key equals" onclick="calculate()">=</div>
             </div>
         </div>
 
-        <!-- GitHub Pages note -->
-        <div class="text-center mt-5 text-xs text-slate-600">
-            Deployed via 
-            <a href="https://pages.github.com" target="_blank" class="text-blue-500 hover:text-blue-400 underline decoration-dotted">GitHub Pages</a>
-            • Single-file • No dependencies
+        <!-- Telemetry -->
+        <div class="telemetry">
+            <div><span class="reg-label">MODE</span><br>DECIMAL</div>
+            <div style="text-align:right"><span class="reg-label">OPS</span><br><span id="op-count">0</span></div>
+            <div style="text-align:right"><span class="reg-label">LAST</span><br><span id="last-op">—</span></div>
         </div>
     </div>
 
-    <script>
-        // Tailwind script
-        function initTailwind() {
-            document.documentElement.style.setProperty('--accent', '#3b82f6');
-        }
+    <div class="footer">
+        GROK FIELD LOG • SPECIMEN-01 • PURE CLIENT-SIDE
+    </div>
 
-        // Calculator state
+    <script>
+        // === Core Calculator State & Logic (refined for the instrument) ===
         let currentInput = '0';
         let previousInput = null;
         let operator = null;
         let shouldResetDisplay = false;
-        let lastOperation = '';
+        let operationCount = 0;
 
         const display = document.getElementById('display');
         const historyEl = document.getElementById('history');
+        const opCountEl = document.getElementById('op-count');
+        const lastOpEl = document.getElementById('last-op');
 
         function updateDisplay() {
-            // Format large numbers nicely
-            let displayValue = currentInput;
-            
-            // Add commas for readability (but not for decimals in input)
-            if (!displayValue.includes('.') && displayValue.length > 6) {
-                const num = parseFloat(displayValue);
-                if (!isNaN(num)) {
-                    displayValue = num.toLocaleString('en-US');
-                }
+            let val = currentInput;
+            if (val.length > 10) {
+                const num = parseFloat(val);
+                val = num.toExponential(4);
             }
-            
-            // Prevent overflow in display
-            if (displayValue.length > 12) {
-                display.style.fontSize = '2.1rem';
-            } else if (displayValue.length > 9) {
-                display.style.fontSize = '2.5rem';
-            } else {
-                display.style.fontSize = '3rem';
-            }
-            
-            display.textContent = displayValue;
+            display.textContent = val;
         }
 
         function updateHistory(text) {
             historyEl.textContent = text || '';
+        }
+
+        function updateTelemetry() {
+            opCountEl.textContent = operationCount;
         }
 
         function appendNumber(num) {
@@ -301,16 +327,15 @@
             const inputValue = parseFloat(currentInput);
 
             if (operator && shouldResetDisplay) {
-                // User clicked another operator without entering new number
                 operator = nextOperator;
-                updateHistory(`${formatNumber(previousInput)} ${getOperatorSymbol(nextOperator)}`);
+                updateHistory(`${formatNumber(previousInput)} ${getSymbol(nextOperator)}`);
                 return;
             }
 
             if (previousInput === null) {
                 previousInput = inputValue;
             } else if (operator) {
-                const result = performCalculation(previousInput, inputValue, operator);
+                const result = compute(previousInput, inputValue, operator);
                 currentInput = String(result);
                 previousInput = result;
                 updateDisplay();
@@ -318,70 +343,53 @@
 
             operator = nextOperator;
             shouldResetDisplay = true;
-            
-            // Update history
-            const symbol = getOperatorSymbol(nextOperator);
-            updateHistory(`${formatNumber(previousInput)} ${symbol}`);
+            updateHistory(`${formatNumber(previousInput)} ${getSymbol(nextOperator)}`);
+            lastOpEl.textContent = getSymbol(nextOperator);
         }
 
-        function getOperatorSymbol(op) {
-            switch (op) {
-                case '+': return '+';
-                case '-': return '−';
-                case '*': return '×';
-                case '/': return '÷';
-                default: return op;
-            }
+        function getSymbol(op) {
+            if (op === '+') return '+';
+            if (op === '-') return '−';
+            if (op === '*') return '×';
+            if (op === '/') return '÷';
+            return op;
         }
 
-        function formatNumber(num) {
-            if (num === null || num === undefined) return '';
-            const str = String(num);
-            // Keep it clean
-            return str.length > 10 ? parseFloat(num).toExponential(3) : str;
+        function formatNumber(n) {
+            if (n === null) return '';
+            const s = String(n);
+            return s.length > 9 ? parseFloat(n).toExponential(2) : s;
         }
 
-        function performCalculation(first, second, op) {
-            switch (op) {
-                case '+':
-                    return first + second;
-                case '-':
-                    return first - second;
-                case '*':
-                    return first * second;
-                case '/':
-                    return second === 0 ? 0 : first / second;
-                default:
-                    return second;
-            }
+        function compute(a, b, op) {
+            operationCount++;
+            updateTelemetry();
+            if (op === '+') return a + b;
+            if (op === '-') return a - b;
+            if (op === '*') return a * b;
+            if (op === '/') return b === 0 ? 0 : a / b;
+            return b;
         }
 
         function calculate() {
-            if (operator === null || shouldResetDisplay) {
-                // Nothing to calculate or already calculated
-                return;
-            }
+            if (!operator || shouldResetDisplay) return;
 
             const inputValue = parseFloat(currentInput);
-            const result = performCalculation(previousInput, inputValue, operator);
-            
-            // Store the full operation for history briefly
-            const fullHistory = `${formatNumber(previousInput)} ${getOperatorSymbol(operator)} ${formatNumber(inputValue)} =`;
-            updateHistory(fullHistory);
+            const result = compute(previousInput, inputValue, operator);
+
+            updateHistory(`${formatNumber(previousInput)} ${getSymbol(operator)} ${formatNumber(inputValue)} =`);
+            lastOpEl.textContent = '=';
 
             currentInput = String(result);
             previousInput = null;
             operator = null;
             shouldResetDisplay = true;
-            
+
             updateDisplay();
 
-            // Clear history after a short delay to clean up
             setTimeout(() => {
-                if (historyEl.textContent.endsWith('=')) {
-                    updateHistory('');
-                }
-            }, 1200);
+                if (historyEl.textContent.endsWith('=')) updateHistory('');
+            }, 1100);
         }
 
         function clearAll() {
@@ -389,9 +397,11 @@
             previousInput = null;
             operator = null;
             shouldResetDisplay = false;
+            operationCount = 0;
             updateHistory('');
             updateDisplay();
-            display.style.fontSize = '3rem';
+            updateTelemetry();
+            lastOpEl.textContent = '—';
         }
 
         function clearEntry() {
@@ -401,206 +411,49 @@
 
         function backspace() {
             if (shouldResetDisplay) return;
-
-            if (currentInput.length <= 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
-                currentInput = '0';
-            } else {
-                currentInput = currentInput.slice(0, -1);
-            }
+            currentInput = currentInput.length <= 1 ? '0' : currentInput.slice(0, -1);
             updateDisplay();
         }
 
         function toggleSign() {
             if (currentInput === '0') return;
-            
-            if (currentInput.startsWith('-')) {
-                currentInput = currentInput.slice(1);
-            } else {
-                currentInput = '-' + currentInput;
-            }
+            currentInput = currentInput.startsWith('-') ? currentInput.slice(1) : '-' + currentInput;
             updateDisplay();
         }
 
-        function calculatePercent() {
-            if (currentInput === '0') return;
-            
-            const value = parseFloat(currentInput);
-            if (operator && previousInput !== null) {
-                // Percentage of previous value (e.g. 200 + 10% = 220)
-                currentInput = String(previousInput * (value / 100));
-            } else {
-                currentInput = String(value / 100);
-            }
-            updateDisplay();
-        }
-
-        // Keyboard support
-        function handleKeyboard(e) {
-            const key = e.key;
-
-            if (key >= '0' && key <= '9') {
-                appendNumber(key);
-                e.preventDefault();
-            } 
-            else if (key === '.') {
-                appendDecimal();
-                e.preventDefault();
-            } 
-            else if (key === '+' || key === '-') {
-                handleOperator(key);
-                e.preventDefault();
-            } 
-            else if (key === '*') {
-                handleOperator('*');
-                e.preventDefault();
-            } 
-            else if (key === '/') {
-                // Prevent browser quick find
-                e.preventDefault();
-                handleOperator('/');
-            } 
-            else if (key === 'Enter' || key === '=') {
-                e.preventDefault();
-                calculate();
-            } 
-            else if (key === 'Escape') {
-                clearAll();
-                e.preventDefault();
-            } 
-            else if (key === 'Backspace') {
-                backspace();
-                e.preventDefault();
-            } 
-            else if (key.toLowerCase() === 'c') {
-                if (e.metaKey || e.ctrlKey) {
-                    // Let default copy happen
-                    return;
-                }
-                clearAll();
-                e.preventDefault();
-            }
-            else if (key === '%') {
-                calculatePercent();
-                e.preventDefault();
-            }
-        }
-
-        function showShortcuts() {
-            const shortcuts = [
-                ['0-9', 'Enter digits'],
-                ['.', 'Decimal point'],
-                ['+', '−', '×', '÷', 'Basic operators'],
-                ['Enter / =', 'Calculate result'],
-                ['Backspace', 'Delete last digit'],
-                ['Esc / C', 'Clear all (AC)'],
-                ['%', 'Percentage']
-            ];
-
-            const html = `
-                <div class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onclick="this.remove()">
-                    <div onclick="event.stopImmediatePropagation()" class="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full text-sm">
-                        <div class="flex justify-between items-center mb-5">
-                            <div class="font-semibold text-lg text-white">Keyboard Shortcuts</div>
-                            <button onclick="this.closest('.fixed').remove()" class="text-slate-400 hover:text-white w-9 h-9 flex items-center justify-center">
-                                <i class="fa-solid fa-times text-xl"></i>
-                            </button>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            ${shortcuts.map(([keys, desc]) => `
-                                <div class="flex justify-between items-center py-1">
-                                    <div class="font-mono text-amber-400">${keys}</div>
-                                    <div class="text-slate-400 text-right">${desc}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="mt-6 pt-5 border-t border-slate-800 text-[11px] text-center text-slate-500">
-                            Works great on desktop &amp; mobile
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', html);
-        }
-
-        // Add keyboard listeners
+        // Keyboard
         function setupKeyboard() {
-            document.addEventListener('keydown', handleKeyboard);
-            
-            // Also allow clicking anywhere on display to focus (for mobile keyboard hint)
-            display.addEventListener('click', () => {
-                // On mobile this doesn't bring up keyboard, but nice for desktop
+            document.addEventListener('keydown', (e) => {
+                const k = e.key;
+                if (k >= '0' && k <= '9') { appendNumber(k); e.preventDefault(); }
+                else if (k === '.') { appendDecimal(); e.preventDefault(); }
+                else if (['+','-','*','/'].includes(k)) { handleOperator(k); e.preventDefault(); }
+                else if (k === 'Enter' || k === '=') { calculate(); e.preventDefault(); }
+                else if (k === 'Escape') { clearAll(); e.preventDefault(); }
+                else if (k === 'Backspace') { backspace(); e.preventDefault(); }
+                else if (k.toLowerCase() === 'c') { clearAll(); e.preventDefault(); }
             });
         }
 
-        // Bonus: Support for pasting numbers
-        function setupClipboard() {
-            display.addEventListener('paste', (e) => {
-                e.preventDefault();
-                const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-                const num = parseFloat(pasteData);
-                if (!isNaN(num)) {
-                    if (shouldResetDisplay) {
-                        currentInput = String(num);
-                        shouldResetDisplay = false;
-                    } else {
-                        currentInput = String(num);
-                    }
-                    updateDisplay();
-                }
-            });
-
-            // Make display copyable
-            display.addEventListener('click', () => {
-                navigator.clipboard.writeText(currentInput).then(() => {
-                    const orig = display.style.transition;
-                    display.style.transition = 'none';
-                    display.style.color = '#64748b';
-                    setTimeout(() => {
-                        display.style.transition = orig || 'all 0.1s ease';
-                        display.style.color = '';
-                    }, 180);
-                }).catch(() => {});
-            });
-        }
-
-        // Prevent zoom on double tap for iOS
-        function preventZoom() {
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function (event) {
-                const now = (new Date()).getTime();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, false);
-        }
-
-        // Initialize everything
-        function initCalculator() {
-            initTailwind();
+        function init() {
             updateDisplay();
+            updateTelemetry();
             setupKeyboard();
-            setupClipboard();
-            preventZoom();
 
-            // Demo value hint on first load (subtle)
+            // Boot with a small welcome state
             setTimeout(() => {
                 if (currentInput === '0' && !operator) {
-                    // nothing — clean start
+                    // ready
                 }
-            }, 800);
+            }, 420);
 
-            // Make sure display starts clean
-            console.log('%c[Calculator] Pure HTML calculator initialized. Ready for GitHub Pages.', 'color:#475569');
+            console.log('%c[CALC-01] Precision Arithmetic Engine online.', 'color:#52525b');
         }
 
-        // Boot
-        window.onload = initCalculator;
+        window.onload = init;
 
-        // Expose for debugging in console if needed
-        window.__calculator = {
-            clearAll, calculate, getState: () => ({ currentInput, previousInput, operator })
-        };
+        // Debug access
+        window.__calc01 = { clearAll, getState: () => ({ currentInput, previousInput, operator, operationCount }) };
     </script>
 </body>
 </html>

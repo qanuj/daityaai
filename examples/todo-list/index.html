@@ -3,541 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do • Quick List</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>VECTOR-03 — TASK LEDGER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
-        
+        :root {
+            --bg: #050505;
+            --panel: #0a0a0a;
+            --text: #e5e5e5;
+            --text-muted: #737373;
+            --accent: #22d3ee;
+            --accent-warm: #eab308;
+            --success: #4ade80;
+            --border: #262626;
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            --font-body: 'Instrument Sans', system-ui, sans-serif;
+        }
+
         body {
-            font-family: 'Inter', system_ui, sans-serif;
-        }
-        
-        .font-display {
-            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+            margin: 0;
+            background: var(--bg);
+            background-image: 
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 18px 18px;
+            color: var(--text);
+            font-family: var(--font-body);
+            padding: 24px 16px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .todo-item {
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .todo-item:hover {
-            transform: translateY(-1px);
+        .instrument {
+            width: 100%;
+            max-width: 480px;
+            background: var(--panel);
+            border: 1px solid var(--border);
         }
 
-        .todo-item.drag-over {
-            border-color: #10b981 !important;
-            background-color: #16653420;
+        .instrument-header {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            padding: 9px 14px 8px;
+            background: #050505;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        .input-row {
+            padding: 14px 14px 8px;
+            background: #050505;
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .input-row input {
+            flex: 1;
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            padding: 9px 12px;
+            outline: none;
+        }
+
+        .input-row input:focus {
+            border-color: var(--accent);
+        }
+
+        .input-row button {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 1px;
+            padding: 0 18px;
+            background: var(--accent);
+            color: #050505;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .filter-bar {
+            display: flex;
+            background: #050505;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-bar button {
+            flex: 1;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            padding: 7px 0;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .filter-bar button.active {
+            background: #121212;
+            color: var(--text);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .ledger {
+            padding: 6px;
+            background: #050505;
+            min-height: 280px;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .ledger-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            font-size: 13px;
+            border-bottom: 1px dotted #1f1f1f;
+            cursor: pointer;
+        }
+
+        .ledger-line:last-child {
+            border-bottom: none;
+        }
+
+        .ledger-line.completed .task-text {
+            text-decoration: line-through;
+            color: #52525b;
+        }
+
+        .check {
+            width: 15px;
+            height: 15px;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: var(--success);
+        }
+
+        .check.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: #050505;
         }
 
         .task-text {
-            transition: all 0.1s ease;
+            flex: 1;
+            font-family: var(--font-mono);
+            letter-spacing: 0.2px;
         }
 
-        .todo-item.completed .task-text {
-            text-decoration: line-through;
-            color: #64748b;
-            opacity: 0.75;
+        .actions {
+            opacity: 0.15;
+            display: flex;
+            gap: 2px;
+            transition: opacity 0.1s ease;
         }
 
-        .todo-list-container {
-            scrollbar-width: thin;
-            scrollbar-color: #475569 #1e293b;
+        .ledger-line:hover .actions {
+            opacity: 1;
         }
 
-        .empty-state {
-            animation: fadeIn 0.3s ease;
+        .action-btn {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 11px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+        .action-btn:hover {
+            color: var(--accent);
         }
 
-        .todo-row {
-            animation: slideIn 0.2s ease backwards;
+        .footer-bar {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            padding: 9px 14px;
+            background: #050505;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
         }
 
-        .filter-btn.active {
-            background-color: #334155;
-            color: white;
-            font-weight: 500;
+        .empty {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 42px 0;
+            letter-spacing: 1px;
         }
     </style>
 </head>
-<body class="bg-slate-950 flex items-center justify-center min-h-screen p-4 text-slate-200">
-    <div class="w-full max-w-[420px]">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-5 px-1">
-            <div class="flex items-center gap-x-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-inner">
-                    <i class="fa-solid fa-list-check text-white text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-semibold tracking-tighter text-white">To-Do</h1>
-                    <p class="text-slate-500 text-sm -mt-1">Quick • Local • Pure HTML</p>
-                </div>
-            </div>
-            <div class="px-3 py-1 bg-slate-900 border border-slate-800 rounded-2xl text-xs flex items-center gap-x-1 text-emerald-400">
-                <i class="fa-solid fa-database fa-sm"></i>
-                <span class="font-medium">Saved locally</span>
-            </div>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div><span style="color:#4ade80">VECTOR-03</span> / TASK LEDGER</div>
+            <div>REV 01 • PERSISTENT</div>
         </div>
 
-        <!-- Add Task -->
-        <div class="flex gap-2 mb-4">
-            <div class="flex-1 relative">
-                <input 
-                    id="new-task-input" 
-                    type="text" 
-                    placeholder="What needs to be done?" 
-                    class="w-full bg-slate-900 border border-slate-700 focus:border-emerald-600 placeholder:text-slate-500 text-white rounded-2xl px-5 py-3 text-sm focus:outline-none transition-colors"
-                    autocomplete="off"
-                >
-            </div>
-            <button 
-                onclick="addNewTask()"
-                class="px-6 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-semibold rounded-2xl flex items-center gap-x-2 text-sm transition-all active:scale-[0.985]">
-                <i class="fa-solid fa-plus"></i>
-                <span class="hidden sm:inline">Add</span>
-            </button>
+        <!-- Add -->
+        <div class="input-row">
+            <input id="new-input" type="text" placeholder="NEW VECTOR ENTRY..." onkeydown="if(event.key==='Enter') addTask()">
+            <button onclick="addTask()">LOG</button>
         </div>
 
         <!-- Filters -->
-        <div class="flex bg-slate-900 border border-slate-800 rounded-2xl p-1 mb-3 text-sm">
-            <button id="filter-all" onclick="setFilter('all')" 
-                    class="filter-btn flex-1 px-4 py-2 rounded-xl text-center transition-colors active:scale-[0.985] text-white bg-slate-700">
-                All
-            </button>
-            <button id="filter-active" onclick="setFilter('active')" 
-                    class="filter-btn flex-1 px-4 py-2 rounded-xl text-center transition-colors active:scale-[0.985] text-slate-400 hover:text-slate-200">
-                Active
-            </button>
-            <button id="filter-completed" onclick="setFilter('completed')" 
-                    class="filter-btn flex-1 px-4 py-2 rounded-xl text-center transition-colors active:scale-[0.985] text-slate-400 hover:text-slate-200">
-                Done
-            </button>
+        <div class="filter-bar">
+            <button id="f-all" onclick="setFilter('all')" class="active">ALL</button>
+            <button id="f-active" onclick="setFilter('active')">ACTIVE</button>
+            <button id="f-completed" onclick="setFilter('completed')">COMPLETED</button>
         </div>
 
-        <!-- Task List -->
-        <div id="todo-list" 
-             class="todo-list-container bg-slate-900 border border-slate-800 rounded-3xl p-2 min-h-[220px] max-h-[420px] overflow-auto space-y-1.5">
-            <!-- Populated by JS -->
-        </div>
+        <!-- Ledger -->
+        <div class="ledger" id="ledger"></div>
 
-        <!-- Footer / Stats -->
-        <div class="flex items-center justify-between mt-3 px-1 text-xs">
-            <div id="stats-text" class="text-slate-400 font-medium">
-                <!-- JS updates -->
-            </div>
-            <button onclick="clearCompleted()" id="clear-completed-btn"
-                    class="hidden px-3 py-1.5 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950 rounded-xl transition-colors text-xs font-medium">
-                Clear completed
-            </button>
-        </div>
-
-        <div class="text-center mt-6 text-[10px] text-slate-600">
-            Drag to reorder • Double-click to edit • Data stays in your browser
+        <!-- Footer -->
+        <div class="footer-bar">
+            <div id="remaining">0 VECTORS REMAINING</div>
+            <button onclick="clearCompleted()" style="font-family:var(--font-mono); font-size:9px; background:none; border:none; color:#4ade80; cursor:pointer; text-transform:uppercase; letter-spacing:1px;">CLEAR COMPLETED</button>
         </div>
     </div>
 
+    <div style="text-align:center; margin-top:14px; font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:#52525b;">
+        GROK FIELD LOG • SPECIMEN-03 • LOCAL ONLY
+    </div>
+
     <script>
-        // State
         let tasks = [];
         let filter = 'all';
         let editingId = null;
+        const STORAGE = 'vector03-ledger';
 
-        const STORAGE_KEY = 'todo-list-v1';
-
-        function saveTasks() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        function save() {
+            localStorage.setItem(STORAGE, JSON.stringify(tasks));
         }
 
-        function loadTasks() {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                tasks = JSON.parse(saved);
+        function load() {
+            const raw = localStorage.getItem(STORAGE);
+            if (raw) {
+                tasks = JSON.parse(raw);
             } else {
-                // Seed a few demo tasks on first visit
-                const now = Date.now();
+                const t = Date.now();
                 tasks = [
-                    { id: now - 5000, text: "Explore this To-Do demo", completed: false },
-                    { id: now - 4000, text: "Add your own task above (or press Enter)", completed: false },
-                    { id: now - 3000, text: "Drag & drop to reorder tasks", completed: false },
-                    { id: now - 2000, text: "Double-click text or tap pencil to edit", completed: true },
-                    { id: now - 1000, text: "Use filters and clear completed", completed: true },
+                    { id: t-4000, text: "Initialize the field log", completed: true },
+                    { id: t-3000, text: "Refine all specimen interfaces", completed: false },
+                    { id: t-2000, text: "Test drag reordering on ledger", completed: false },
+                    { id: t-1000, text: "Document the new aesthetic system", completed: false }
                 ];
-                saveTasks();
+                save();
             }
         }
 
-        function setFilter(newFilter) {
-            filter = newFilter;
-            renderTasks();
+        function setFilter(f) {
+            filter = f;
+            document.querySelectorAll('.filter-bar button').forEach(b => b.classList.remove('active'));
+            document.getElementById('f-' + f).classList.add('active');
+            render();
         }
 
-        function updateFilterButtons() {
-            const filters = ['all', 'active', 'completed'];
-            filters.forEach(f => {
-                const btn = document.getElementById('filter-' + f);
-                if (!btn) return;
+        function render() {
+            const ledger = document.getElementById('ledger');
+            ledger.innerHTML = '';
 
-                if (filter === f) {
-                    btn.classList.add('bg-slate-700', 'text-white', 'font-medium');
-                    btn.classList.remove('text-slate-400');
-                } else {
-                    btn.classList.remove('bg-slate-700', 'text-white', 'font-medium');
-                    btn.classList.add('text-slate-400');
-                }
-            });
-        }
+            let visible = tasks;
+            if (filter === 'active') visible = tasks.filter(t => !t.completed);
+            if (filter === 'completed') visible = tasks.filter(t => t.completed);
 
-        function updateStats() {
-            const statsEl = document.getElementById('stats-text');
-            const clearBtn = document.getElementById('clear-completed-btn');
-
-            const activeCount = tasks.filter(t => !t.completed).length;
-            const completedCount = tasks.length - activeCount;
-
-            statsEl.textContent = `${activeCount} ${activeCount === 1 ? 'task' : 'tasks'} left`;
-
-            if (completedCount > 0) {
-                clearBtn.classList.remove('hidden');
-                clearBtn.classList.add('inline-block');
-            } else {
-                clearBtn.classList.add('hidden');
-                clearBtn.classList.remove('inline-block');
-            }
-        }
-
-        function renderTasks() {
-            const listEl = document.getElementById('todo-list');
-            listEl.innerHTML = '';
-
-            let filteredTasks = tasks;
-            if (filter === 'active') {
-                filteredTasks = tasks.filter(t => !t.completed);
-            } else if (filter === 'completed') {
-                filteredTasks = tasks.filter(t => t.completed);
-            }
-
-            if (filteredTasks.length === 0) {
-                const empty = document.createElement('div');
-                empty.className = 'empty-state flex flex-col items-center justify-center py-8 text-center text-slate-400';
-                empty.innerHTML = `
-                    <i class="fa-solid fa-inbox text-4xl mb-3 opacity-40"></i>
-                    <div class="text-sm font-medium">No ${filter === 'all' ? '' : filter} tasks</div>
-                    ${filter === 'all' ? '<div class="text-xs mt-1 text-slate-500">Add your first task using the field above</div>' : ''}
-                `;
-                listEl.appendChild(empty);
-                updateFilterButtons();
-                updateStats();
+            if (visible.length === 0) {
+                const e = document.createElement('div');
+                e.className = 'empty';
+                e.textContent = filter === 'all' ? 'LEDGER EMPTY — LOG FIRST VECTOR' : 'NO ' + filter.toUpperCase() + ' VECTORS';
+                ledger.appendChild(e);
+                updateFooter();
                 return;
             }
 
-            filteredTasks.forEach(task => {
-                const item = createTaskItem(task);
-                listEl.appendChild(item);
+            visible.forEach(task => {
+                const row = document.createElement('div');
+                row.className = `ledger-line ${task.completed ? 'completed' : ''}`;
+                row.dataset.id = task.id;
+
+                const check = document.createElement('div');
+                check.className = `check ${task.completed ? 'checked' : ''}`;
+                check.innerHTML = task.completed ? '<i class="fa-solid fa-check"></i>' : '';
+                check.onclick = (e) => { e.stopImmediatePropagation(); toggle(task.id); };
+
+                const text = document.createElement('div');
+                text.className = 'task-text';
+                text.textContent = task.text;
+
+                if (editingId === task.id) {
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.value = task.text;
+                    inp.style.cssText = 'flex:1;background:#0a0a0a;border:1px solid var(--accent);font-family:var(--font-mono);font-size:13px;padding:2px 5px;color:var(--text);';
+                    inp.onkeydown = (ev) => {
+                        if (ev.key === 'Enter') saveEdit(task.id, inp.value);
+                        if (ev.key === 'Escape') cancelEdit();
+                    };
+                    inp.onblur = () => saveEdit(task.id, inp.value);
+                    text.replaceWith(inp);
+                    setTimeout(() => inp.focus(), 10);
+                } else {
+                    text.ondblclick = () => startEdit(task.id);
+                }
+
+                const actions = document.createElement('div');
+                actions.className = 'actions';
+
+                const edit = document.createElement('button');
+                edit.className = 'action-btn';
+                edit.innerHTML = '<i class="fa-solid fa-pencil"></i>';
+                edit.onclick = (e) => { e.stopImmediatePropagation(); startEdit(task.id); };
+
+                const del = document.createElement('button');
+                del.className = 'action-btn';
+                del.innerHTML = '<i class="fa-solid fa-trash"></i>';
+                del.onclick = (e) => { e.stopImmediatePropagation(); remove(task.id); };
+
+                actions.append(edit, del);
+
+                row.append(check, text, actions);
+                ledger.appendChild(row);
             });
 
-            // Attach drag & drop after items exist
-            attachDragAndDrop(listEl);
-
-            updateFilterButtons();
-            updateStats();
+            updateFooter();
         }
 
-        function createTaskItem(task) {
-            const item = document.createElement('div');
-            item.className = `todo-item group flex items-center gap-x-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-2xl px-4 py-3 transition-all ${task.completed ? 'completed opacity-80' : ''}`;
-            item.dataset.id = task.id;
+        function updateFooter() {
+            const rem = document.getElementById('remaining');
+            const active = tasks.filter(t => !t.completed).length;
+            rem.textContent = `${active} VECTOR${active === 1 ? '' : 'S'} REMAINING`;
+        }
 
-            // Checkbox wrapper (custom look, no peer dependency issues)
-            const checkWrapper = document.createElement('div');
-            checkWrapper.className = 'flex-shrink-0 cursor-pointer';
-            checkWrapper.innerHTML = `
-                <div class="w-5 h-5 border-2 ${task.completed ? 'bg-emerald-500 border-emerald-500' : 'border-slate-600 hover:border-slate-400'} rounded-lg flex items-center justify-center transition-all">
-                    <i class="fa-solid fa-check text-white text-[10px] ${task.completed ? '' : 'opacity-0'}"></i>
-                </div>
-            `;
-            checkWrapper.onclick = (e) => {
-                e.stopImmediatePropagation();
-                toggleTask(task.id);
-            };
+        function addTask() {
+            const inp = document.getElementById('new-input');
+            const val = inp.value.trim();
+            if (!val) return;
 
-            // Text or edit input
-            let contentEl;
-            if (editingId === task.id) {
-                // Edit mode
-                contentEl = document.createElement('input');
-                contentEl.type = 'text';
-                contentEl.value = task.text;
-                contentEl.className = 'edit-input flex-1 bg-slate-700 border border-emerald-600 focus:border-emerald-500 rounded-xl px-3 py-1.5 text-sm text-white focus:outline-none';
-                contentEl.dataset.id = task.id;
+            tasks.unshift({ id: Date.now(), text: val, completed: false });
+            inp.value = '';
+            save();
+            render();
+            inp.focus();
+        }
 
-                contentEl.onkeydown = (e) => {
-                    if (e.key === 'Enter') {
-                        saveEdit(task.id, contentEl.value);
-                    } else if (e.key === 'Escape') {
-                        cancelEdit();
-                    }
-                };
-                // Save on blur (with tiny delay so buttons can work)
-                contentEl.onblur = () => {
-                    setTimeout(() => {
-                        if (editingId === task.id) {
-                            saveEdit(task.id, contentEl.value);
-                        }
-                    }, 80);
-                };
-            } else {
-                contentEl = document.createElement('div');
-                contentEl.className = `task-text flex-1 text-sm leading-tight cursor-pointer select-text pr-2 ${task.completed ? 'line-through text-slate-400' : 'text-white'}`;
-                contentEl.textContent = task.text;
-                contentEl.ondblclick = () => startEdit(task.id);
+        function toggle(id) {
+            const t = tasks.find(x => x.id === id);
+            if (t) {
+                t.completed = !t.completed;
+                if (editingId === id) editingId = null;
+                save();
+                render();
             }
-
-            // Actions
-            const actions = document.createElement('div');
-            actions.className = `flex items-center gap-x-1 opacity-0 group-hover:opacity-100 transition-opacity ${editingId === task.id ? 'hidden' : ''}`;
-
-            // Edit button
-            const editBtn = document.createElement('button');
-            editBtn.className = 'w-8 h-8 flex items-center justify-center text-slate-400 hover:text-emerald-400 hover:bg-slate-600 rounded-xl transition-colors';
-            editBtn.innerHTML = '<i class="fa-solid fa-pencil fa-sm"></i>';
-            editBtn.onclick = (e) => {
-                e.stopImmediatePropagation();
-                startEdit(task.id);
-            };
-
-            // Delete button
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-400 hover:bg-slate-600 rounded-xl transition-colors';
-            deleteBtn.innerHTML = '<i class="fa-solid fa-trash fa-sm"></i>';
-            deleteBtn.onclick = (e) => {
-                e.stopImmediatePropagation();
-                deleteTask(task.id);
-            };
-
-            actions.appendChild(editBtn);
-            actions.appendChild(deleteBtn);
-
-            // Assemble row
-            item.appendChild(checkWrapper);
-            item.appendChild(contentEl);
-            item.appendChild(actions);
-
-            return item;
         }
 
-        function attachDragAndDrop(listEl) {
-            const items = listEl.querySelectorAll('.todo-item');
-
-            items.forEach(item => {
-                item.setAttribute('draggable', 'true');
-
-                item.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', item.dataset.id);
-                    item.style.opacity = '0.4';
-                    item.style.transition = 'opacity 0.1s';
-                });
-
-                item.addEventListener('dragend', () => {
-                    item.style.opacity = '1';
-                });
-
-                item.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    item.classList.add('drag-over');
-                });
-
-                item.addEventListener('dragleave', () => {
-                    item.classList.remove('drag-over');
-                });
-
-                item.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    item.classList.remove('drag-over');
-
-                    const draggedId = parseInt(e.dataTransfer.getData('text/plain'));
-                    const targetId = parseInt(item.dataset.id);
-
-                    if (draggedId === targetId) return;
-
-                    reorderTasks(draggedId, targetId);
-                });
-            });
-        }
-
-        function reorderTasks(draggedId, targetId) {
-            const fromIndex = tasks.findIndex(t => t.id === draggedId);
-            const toIndex = tasks.findIndex(t => t.id === targetId);
-
-            if (fromIndex === -1 || toIndex === -1) return;
-
-            const [movedTask] = tasks.splice(fromIndex, 1);
-            tasks.splice(toIndex, 0, movedTask);
-
-            saveTasks();
-            renderTasks();
-        }
-
-        function addNewTask() {
-            const input = document.getElementById('new-task-input');
-            if (!input) return;
-
-            const text = input.value.trim();
-            if (!text) return;
-
-            const newTask = {
-                id: Date.now(),
-                text: text,
-                completed: false
-            };
-
-            tasks.unshift(newTask); // newest on top
-            input.value = '';
-
-            saveTasks();
-            renderTasks();
-
-            // Keep focus for quick successive adds
-            setTimeout(() => input.focus(), 10);
-        }
-
-        function toggleTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return;
-
-            task.completed = !task.completed;
-
-            // If we were editing this task, cancel edit
+        function remove(id) {
+            tasks = tasks.filter(x => x.id !== id);
             if (editingId === id) editingId = null;
-
-            saveTasks();
-            renderTasks();
-        }
-
-        function deleteTask(id) {
-            tasks = tasks.filter(t => t.id !== id);
-
-            if (editingId === id) editingId = null;
-
-            saveTasks();
-            renderTasks();
+            save();
+            render();
         }
 
         function startEdit(id) {
             editingId = id;
-            renderTasks();
-
-            // Focus the newly created edit input
-            setTimeout(() => {
-                const editInput = document.querySelector(`.edit-input[data-id="${id}"]`);
-                if (editInput) {
-                    editInput.focus();
-                    editInput.select();
-                }
-            }, 30);
+            render();
         }
 
         function saveEdit(id, newText) {
+            const t = tasks.find(x => x.id === id);
             const trimmed = (newText || '').trim();
-            if (!trimmed) {
-                cancelEdit();
-                return;
-            }
-
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                task.text = trimmed;
-            }
-
+            if (t && trimmed) t.text = trimmed;
             editingId = null;
-            saveTasks();
-            renderTasks();
+            save();
+            render();
         }
 
         function cancelEdit() {
             editingId = null;
-            renderTasks();
+            render();
         }
 
         function clearCompleted() {
             tasks = tasks.filter(t => !t.completed);
-            saveTasks();
-            renderTasks();
+            save();
+            render();
         }
 
-        function setFilterAndRender(newFilter) {
-            filter = newFilter;
-            renderTasks();
-        }
+        function setFilterAndRender(f) { setFilter(f); }
 
-        function attachGlobalShortcuts() {
-            const input = document.getElementById('new-task-input');
+        // Drag & drop
+        function enableDrag() {
+            const ledger = document.getElementById('ledger');
+            let draggedId = null;
 
-            document.addEventListener('keydown', (e) => {
-                // Press "/" to focus input (when not already typing)
-                if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-                    e.preventDefault();
-                    if (input) input.focus();
-                }
-
-                // Escape handling
-                if (e.key === 'Escape') {
-                    const active = document.activeElement;
-                    if (active && active.classList.contains('edit-input')) {
-                        e.preventDefault();
-                        cancelEdit();
-                    } else if (active && active.id === 'new-task-input') {
-                        active.blur();
-                    }
-                }
+            ledger.addEventListener('dragstart', (e) => {
+                const row = e.target.closest('.ledger-line');
+                if (!row) return;
+                draggedId = parseInt(row.dataset.id);
+                e.dataTransfer.effectAllowed = 'move';
             });
 
-            // Click anywhere on empty list area focuses input (nice)
-            const listContainer = document.getElementById('todo-list');
-            if (listContainer) {
-                listContainer.addEventListener('click', (e) => {
-                    if (e.target === listContainer && document.activeElement.id !== 'new-task-input') {
-                        input.focus();
-                    }
-                });
-            }
+            ledger.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const row = e.target.closest('.ledger-line');
+                if (row) row.style.borderTop = '1px solid var(--accent)';
+            });
+
+            ledger.addEventListener('dragleave', (e) => {
+                const row = e.target.closest('.ledger-line');
+                if (row) row.style.borderTop = '';
+            });
+
+            ledger.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const row = e.target.closest('.ledger-line');
+                if (!row || !draggedId) return;
+
+                const targetId = parseInt(row.dataset.id);
+                row.style.borderTop = '';
+
+                const from = tasks.findIndex(t => t.id === draggedId);
+                const to = tasks.findIndex(t => t.id === targetId);
+                if (from === -1 || to === -1 || from === to) return;
+
+                const [moved] = tasks.splice(from, 1);
+                tasks.splice(to, 0, moved);
+                save();
+                render();
+            });
+
+            // Make rows draggable
+            ledger.addEventListener('mousedown', (e) => {
+                const row = e.target.closest('.ledger-line');
+                if (row) row.draggable = true;
+            });
         }
 
-        function initTodoApp() {
-            loadTasks();
-
-            // Initial render
-            renderTasks();
-
-            // Input enter support (also wired in onclick for the button)
-            const input = document.getElementById('new-task-input');
-            if (input) {
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        addNewTask();
-                    }
-                });
-            }
-
-            attachGlobalShortcuts();
-
-            // Make sure initial filter buttons are correct
-            updateFilterButtons();
-
-            console.log('%c[To-Do] Quick To-Do List ready — pure single-file HTML + localStorage', 'color:#475569');
+        function setupShortcuts() {
+            const inp = document.getElementById('new-input');
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    inp.focus();
+                }
+                if (e.key === 'Escape' && document.activeElement === inp) inp.blur();
+            });
         }
 
-        window.onload = initTodoApp;
+        function initLedger() {
+            load();
+            render();
+            enableDrag();
+            setupShortcuts();
 
-        // Expose for console debugging / demos
-        window.__todos = {
-            getTasks: () => [...tasks],
-            resetDemo: () => { localStorage.removeItem('todo-list-v1'); location.reload(); }
-        };
+            const inp = document.getElementById('new-input');
+            inp.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') addTask();
+            });
+
+            // initial filter
+            document.getElementById('f-all').classList.add('active');
+
+            console.log('%c[VECTOR-03] Task Ledger initialized. All vectors local.', 'color:#52525b');
+        }
+
+        window.onload = initLedger;
+        window.__vector03 = { reset: () => { localStorage.removeItem('vector03-ledger'); location.reload(); } };
     </script>
 </body>
 </html>
