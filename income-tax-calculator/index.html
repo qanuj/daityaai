@@ -12,6 +12,25 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Income Tax Calculator India 2025",
+      "url": "https://qanuj.github.io/daityaai/income-tax-calculator/",
+      "applicationCategory": "FinanceApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "description": "Free accurate Income Tax Calculator for India under the New Tax Regime. Calculate tax, cess, and take-home pay with latest slabs.",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript"
+    }
+    </script>
     <style>
         :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
         html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
@@ -73,6 +92,37 @@
         <div class="slab" id="slabs">
             <!-- populated by JS -->
         </div>
+    </div>
+
+    <!-- Additional SEO Content for better rankings -->
+    <div style="max-width:420px; width:100%; margin-top:24px; padding:0 16px; font-size:14px; color:var(--text-muted); line-height:1.6;">
+        <h2 style="font-family:var(--font-mono); font-size:14px; letter-spacing:1px; color:var(--text); margin-bottom:8px; text-transform:uppercase;">How to use this Income Tax Calculator</h2>
+        <p>Enter your Gross Total Income (salary + other sources). Add eligible deductions under sections like 80C (PPF, ELSS, life insurance up to ₹1.5L). Select your age group for any senior citizen benefits. The calculator uses the latest New Tax Regime slabs for FY 2025-26 and automatically applies the 4% Health & Education Cess.</p>
+
+        <h2 style="font-family:var(--font-mono); font-size:14px; letter-spacing:1px; color:var(--text); margin:16px 0 8px; text-transform:uppercase;">New Tax Regime Slabs (FY 2025-26)</h2>
+        <ul style="padding-left:20px; margin:0;">
+            <li>₹0 – ₹3 Lakh: 0%</li>
+            <li>₹3 – ₹7 Lakh: 5%</li>
+            <li>₹7 – ₹10 Lakh: 10%</li>
+            <li>₹10 – ₹12 Lakh: 15%</li>
+            <li>₹12 – ₹15 Lakh: 20%</li>
+            <li>Above ₹15 Lakh: 30%</li>
+        </ul>
+        <p style="margin-top:8px;">Standard deduction of ₹50,000 is applied. This tool helps you quickly estimate your tax liability and take-home salary.</p>
+
+        <h2 style="font-family:var(--font-mono); font-size:14px; letter-spacing:1px; color:var(--text); margin:16px 0 8px; text-transform:uppercase;">Frequently Asked Questions</h2>
+        <details style="margin-bottom:6px;">
+            <summary style="cursor:pointer; color:var(--accent);">Which tax regime should I choose?</summary>
+            <p style="margin:4px 0 0 16px;">The New Regime is now the default. It offers lower tax rates but fewer deductions. Use this calculator to compare your actual liability.</p>
+        </details>
+        <details style="margin-bottom:6px;">
+            <summary style="cursor:pointer; color:var(--accent);">Is standard deduction included?</summary>
+            <p style="margin:4px 0 0 16px;">Yes, ₹50,000 standard deduction is automatically factored in for salaried individuals.</p>
+        </details>
+        <details>
+            <summary style="cursor:pointer; color:var(--accent);">Are the slabs updated for 2025?</summary>
+            <p style="margin:4px 0 0 16px;">Yes, this calculator uses the New Tax Regime slabs applicable for Assessment Year 2026-27 (FY 2025-26).</p>
+        </details>
     </div>
 
     <div class="footer">

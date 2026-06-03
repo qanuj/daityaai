@@ -12,6 +12,18 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SIP Return Calculator with Step-up India",
+      "url": "https://qanuj.github.io/daityaai/sip-return-calculator/",
+      "applicationCategory": "FinanceApplication",
+      "offers": {"@type": "Offer", "price": "0"},
+      "description": "Advanced SIP calculator with annual step-up and inflation adjustment. Calculate future value and real returns for Indian investors."
+    }
+    </script>
     <style>
         :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
         html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
@@ -60,6 +72,13 @@
             <div class="row"><div class="l">TOTAL INVESTED</div><div id="invested" class="v">—</div></div>
             <div class="row"><div class="l">WEALTH GAINED</div><div id="gain" class="v">—</div></div>
         </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div style="max-width:420px; width:100%; margin-top:24px; padding:0 16px; font-size:14px; color:var(--text-muted); line-height:1.6;">
+        <h2 style="font-family:var(--font-mono); font-size:14px; letter-spacing:1px; color:var(--text); margin-bottom:8px; text-transform:uppercase;">Why Use Step-up SIP?</h2>
+        <p>Increasing your SIP contribution by 10% every year (step-up) can dramatically increase your corpus because of compounding. This calculator also adjusts for inflation so you see the real purchasing power of your future wealth.</p>
+        <p><strong>Formula:</strong> Future Value with step-up SIP involves growing the monthly contribution annually while compounding monthly at the expected rate of return.</p>
     </div>
 
     <div class="footer">

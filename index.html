@@ -19,6 +19,39 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://qanuj.github.io/daityaai/">
     <meta property="og:image" content="https://qanuj.github.io/daityaai/diatya-ai-icon.svg">
+
+    <!-- Structured Data for Google Rich Results & SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://qanuj.github.io/daityaai/#organization",
+          "name": "DaityaAI Academy",
+          "url": "https://qanuj.github.io/daityaai/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://qanuj.github.io/daityaai/diatya-ai-icon.svg"
+          },
+          "description": "DaityaAI Academy creates beautiful, self-contained web instruments (calculators, games, educational tools) for learning, building, and launching. All tools are pure single-file HTML with no build or server required.",
+          "sameAs": ["https://github.com/qanuj/daityaai"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://qanuj.github.io/daityaai/#website",
+          "url": "https://qanuj.github.io/daityaai/",
+          "name": "DaityaAI Academy - Free Tools & Calculators",
+          "publisher": { "@id": "https://qanuj.github.io/daityaai/#organization" },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://qanuj.github.io/daityaai/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
     <style>
         :root {
             /* Apple-inspired elegant dark (rich, not raw) */

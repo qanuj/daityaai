@@ -12,6 +12,18 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Home Loan EMI Calculator India",
+      "url": "https://qanuj.github.io/daityaai/home-loan-emi-calculator/",
+      "applicationCategory": "FinanceApplication",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"},
+      "description": "Free Home Loan EMI Calculator with prepayment option, total interest, and amortization schedule for Indian borrowers."
+    }
+    </script>
     <style>
         :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
         html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
@@ -64,6 +76,20 @@
             <div style="color:var(--text-muted);margin-bottom:4px;">FIRST 6 INSTALMENTS</div>
             <div id="schedule-body" style="font-size:9.5px;"></div>
         </div>
+    </div>
+
+    <!-- SEO Content -->
+    <div style="max-width:420px; width:100%; margin-top:24px; padding:0 16px; font-size:14px; color:var(--text-muted); line-height:1.6;">
+        <h2 style="font-family:var(--font-mono); font-size:14px; letter-spacing:1px; color:var(--text); margin-bottom:8px; text-transform:uppercase;">How Home Loan EMI is Calculated</h2>
+        <p>EMI = [P x R x (1+R)^N] / [(1+R)^N – 1], where P = Loan amount, R = Monthly interest rate, N = Loan tenure in months.</p>
+        <p>Prepayments reduce the outstanding principal, which can significantly lower your total interest outgo. Use the prepayment field to simulate one-time or regular lump sum payments.</p>
+
+        <h2 style="font-family:var(--font-mono); font-size:14px; letter-spacing:1px; color:var(--text); margin:16px 0 8px; text-transform:uppercase;">Tips for Indian Home Buyers</h2>
+        <ul style="padding-left:20px; margin:0 0 12px;">
+            <li>Compare offers from SBI, HDFC, LIC Housing, etc.</li>
+            <li>Consider tax benefits under Section 80C (principal) and 24(b) (interest).</li>
+            <li>Even small prepayments early in the tenure save a lot of interest.</li>
+        </ul>
     </div>
 
     <div class="footer">
