@@ -3,34 +3,745 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=examples/">
-    <title>learning-grok</title>
+    <title>learning-grok • Pure HTML demos</title>
+    <meta name="description" content="A collection of beautiful, self-contained web tools and games built as pure single-file HTML experiences while learning with Grok.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { 
-            font-family: system-ui, -apple-system, sans-serif; 
-            background: #0f172a; 
-            color: #64748b; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
-            margin: 0;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --slate-950: #0f172a;
         }
-        a { color: #3b82f6; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header {
+            letter-spacing: -0.03em;
+        }
+
+        .grand-card {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 0.2s ease;
+        }
+        
+        .grand-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.35), 
+                       0 10px 10px -5px rgb(0 0 0 / 0.2);
+            border-color: #475569;
+        }
+
+        .mini-display {
+            font-family: 'Space Grotesk', ui-monospace, monospace;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .mini-calc-btn {
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.1s ease;
+        }
+        
+        .mini-calc-btn:active {
+            transform: scale(0.9);
+        }
+
+        .mini-board {
+            background: #1e293b;
+        }
+        
+        .mini-cell {
+            font-family: 'Space Grotesk', system_ui, sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.15s ease;
+        }
+
+        .mini-cell.win {
+            background-color: rgba(52, 211, 153, 0.18);
+            border-color: #10b981;
+        }
+
+        .feature-card {
+            transition: all 0.2s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-2px);
+            background-color: #1e293b;
+        }
+
+        .showcase-bg {
+            background-image: 
+                linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)),
+                url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill-rule=%22evenodd%22%3E%3Cpath fill=%22%23334155%22 fill-opacity=%22008%22 d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-10V8h-2v16h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 6v-4H4v4H0v2h4v4h2V8h4V6H6z%22/%3E%3C/g%3E%3C/svg%27');
+            background-size: 60px 60px;
+        }
+
+        .nav-scrolled {
+            background-color: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+        }
+
+        .demo-badge {
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
-<body>
-    <div>
-        Redirecting to <a href="examples/">examples/</a>...
+<body class="bg-slate-950 text-slate-200">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur-lg">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
+            <div class="flex items-center gap-x-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-graduation-cap text-white text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-semibold text-xl tracking-tighter">learning-grok</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-x-2">
+                <a href="#showcase" 
+                   class="hidden sm:flex items-center gap-x-2 px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900 rounded-2xl transition-colors">
+                    <i class="fa-solid fa-play fa-sm"></i>
+                    <span>Showcase</span>
+                </a>
+                <a href="examples/" 
+                   class="flex items-center gap-x-2 px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900 rounded-2xl transition-colors">
+                    <span>All examples</span>
+                </a>
+                <a href="https://github.com/qanuj/learning-grok" target="_blank"
+                   class="inline-flex items-center gap-x-2 px-5 py-2 text-sm font-medium bg-white text-slate-950 hover:bg-slate-100 rounded-2xl transition-all active:scale-[0.985]">
+                    <i class="fa-brands fa-github"></i>
+                    <span class="hidden sm:inline">GitHub</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="max-w-5xl mx-auto px-6 pt-16 pb-12 text-center">
+        <div class="inline-flex items-center gap-x-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium mb-6">
+            <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+            <span class="text-emerald-400">Live on GitHub Pages</span>
+        </div>
+        
+        <h1 class="text-6xl sm:text-7xl font-semibold tracking-tighter text-white mb-4">
+            learning-grok
+        </h1>
+        <p class="max-w-2xl mx-auto text-2xl text-slate-400 tracking-tight mb-8">
+            Beautiful, self-contained web tools and games.<br>
+            <span class="text-slate-500">Pure single-file HTML. Zero build steps.</span>
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="#showcase" 
+               class="group inline-flex items-center justify-center gap-x-3 px-8 py-4 bg-white text-slate-950 font-semibold rounded-3xl hover:bg-slate-100 transition-all active:scale-[0.985] text-base">
+                <span>Explore the demos</span>
+                <i class="fa-solid fa-arrow-down group-active:translate-y-0.5 transition-transform"></i>
+            </a>
+            <a href="https://github.com/qanuj/learning-grok" target="_blank"
+               class="inline-flex items-center justify-center gap-x-3 px-8 py-4 bg-slate-900 hover:bg-slate-800 border border-slate-700 font-medium rounded-3xl transition-all active:scale-[0.985] text-base">
+                <i class="fa-brands fa-github text-lg"></i>
+                <span>View source on GitHub</span>
+            </a>
+        </div>
+        
+        <div class="mt-6 text-xs text-slate-500 flex items-center justify-center gap-x-2">
+            <span>Built while learning with Grok</span>
+            <span class="text-slate-700">•</span>
+            <span>April 2026</span>
+        </div>
     </div>
+
+    <!-- Stats -->
+    <div class="max-w-5xl mx-auto px-6 pb-14">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl px-5 py-4 text-center">
+                <div class="text-3xl font-semibold text-white tabular-nums">2</div>
+                <div class="text-xs text-slate-400 mt-0.5 tracking-wide">INTERACTIVE DEMOS</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl px-5 py-4 text-center">
+                <div class="text-3xl font-semibold text-white">100%</div>
+                <div class="text-xs text-slate-400 mt-0.5 tracking-wide">PURE HTML + JS</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl px-5 py-4 text-center">
+                <div class="text-3xl font-semibold text-emerald-400">0</div>
+                <div class="text-xs text-slate-400 mt-0.5 tracking-wide">BUILD STEPS REQUIRED</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl px-5 py-4 text-center">
+                <div class="text-3xl font-semibold text-white">∞</div>
+                <div class="text-xs text-slate-400 mt-0.5 tracking-wide">YEARS IT WILL JUST WORK</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grand Showcase -->
+    <div id="showcase" class="max-w-6xl mx-auto px-6 pb-20">
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <div class="uppercase text-xs tracking-[2px] text-slate-500 font-medium mb-1">The collection</div>
+                <h2 class="section-header text-4xl font-semibold tracking-tighter text-white">Grand Showcase</h2>
+            </div>
+            <a href="examples/" class="hidden md:flex items-center text-sm text-slate-400 hover:text-white transition-colors gap-x-1.5">
+                View all examples <i class="fa-solid fa-chevron-right fa-xs"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Calculator Card -->
+            <div class="grand-card group bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col">
+                <!-- Card Header -->
+                <div class="px-6 pt-6 pb-4 bg-gradient-to-r from-amber-600/10 to-orange-600/5 border-b border-slate-800">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-x-3">
+                            <div class="w-11 h-11 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-inner">
+                                <i class="fa-solid fa-calculator text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-x-2">
+                                    <h3 class="text-2xl font-semibold tracking-tight">Calculator</h3>
+                                    <span class="demo-badge px-2 py-px rounded-full bg-emerald-950 text-emerald-400 border border-emerald-900/60">LIVE</span>
+                                </div>
+                                <p class="text-xs text-slate-400 -mt-0.5">Pure HTML • Fully featured</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teaser Visual -->
+                <div class="p-6 bg-slate-950">
+                    <div class="mx-auto max-w-[240px]">
+                        <!-- Mini Calculator -->
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-2 shadow-inner">
+                            <!-- Display -->
+                            <div id="mini-calc-display" 
+                                 class="mini-display bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-right text-3xl font-semibold text-white tabular-nums h-14 flex items-center justify-end">
+                                1,024
+                            </div>
+                            
+                            <!-- Buttons -->
+                            <div class="grid grid-cols-4 gap-1.5 mt-2" id="mini-calc-buttons">
+                                <div onclick="miniCalcAction('C')" class="mini-calc-btn col-span-1 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg py-2 text-center text-[10px] font-medium cursor-pointer">AC</div>
+                                <div onclick="miniCalcAction('CE')" class="mini-calc-btn col-span-1 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg py-2 text-center text-[10px] font-medium cursor-pointer">CE</div>
+                                <div onclick="miniCalcAction('back')" class="mini-calc-btn col-span-1 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg py-2 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-delete-left fa-sm"></i></div>
+                                <div onclick="miniCalcAction('/')" class="mini-calc-btn col-span-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg py-2 text-center text-lg font-semibold cursor-pointer">÷</div>
+                                
+                                <div onclick="miniCalcAction('7')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">7</div>
+                                <div onclick="miniCalcAction('8')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">8</div>
+                                <div onclick="miniCalcAction('9')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">9</div>
+                                <div onclick="miniCalcAction('*')" class="mini-calc-btn bg-amber-500 hover:bg-amber-600 text-white rounded-lg py-2 text-center text-lg font-semibold cursor-pointer">×</div>
+                                
+                                <div onclick="miniCalcAction('4')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">4</div>
+                                <div onclick="miniCalcAction('5')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">5</div>
+                                <div onclick="miniCalcAction('6')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">6</div>
+                                <div onclick="miniCalcAction('-')" class="mini-calc-btn bg-amber-500 hover:bg-amber-600 text-white rounded-lg py-2 text-center text-xl font-light cursor-pointer">−</div>
+                                
+                                <div onclick="miniCalcAction('1')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">1</div>
+                                <div onclick="miniCalcAction('2')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">2</div>
+                                <div onclick="miniCalcAction('3')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">3</div>
+                                <div onclick="miniCalcAction('+')" class="mini-calc-btn bg-amber-500 hover:bg-amber-600 text-white rounded-lg py-2 text-center text-xl font-light cursor-pointer">+</div>
+                                
+                                <div onclick="miniCalcAction('0')" class="mini-calc-btn col-span-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-sm font-medium cursor-pointer">0</div>
+                                <div onclick="miniCalcAction('.')" class="mini-calc-btn bg-slate-800 hover:bg-slate-700 text-white rounded-lg py-2 text-center text-lg font-medium cursor-pointer">.</div>
+                                <div onclick="miniCalcAction('=')" class="mini-calc-btn col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg py-2 text-center text-xl font-semibold cursor-pointer">=</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 pb-6 flex-1 flex flex-col">
+                    <p class="text-slate-400 text-[15px] leading-relaxed">
+                        Fully functional calculator with keyboard support, chaining operations, percentages, clipboard integration, and beautiful animations.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-1.5 mt-4">
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Keyboard</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Percentages</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Clipboard</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">No deps</span>
+                    </div>
+                    
+                    <div class="mt-auto pt-5 flex items-center gap-x-3">
+                        <a href="examples/calculator/" 
+                           class="flex-1 text-center px-5 py-3 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-950 font-semibold rounded-2xl text-sm transition-all">
+                            Open full Calculator →
+                        </a>
+                        <a href="https://github.com/qanuj/learning-grok/blob/main/examples/calculator/index.html" target="_blank"
+                           class="px-4 py-3 border border-slate-700 hover:bg-slate-800 rounded-2xl text-sm flex items-center justify-center transition-colors" title="View source">
+                            <i class="fa-solid fa-code"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tic Tac Toe Card -->
+            <div class="grand-card group bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col">
+                <!-- Card Header -->
+                <div class="px-6 pt-6 pb-4 bg-gradient-to-r from-violet-600/10 to-fuchsia-600/5 border-b border-slate-800">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-x-3">
+                            <div class="w-11 h-11 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-2xl flex items-center justify-center shadow-inner">
+                                <i class="fa-solid fa-gamepad text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-x-2">
+                                    <h3 class="text-2xl font-semibold tracking-tight">Tic Tac Toe</h3>
+                                    <span class="demo-badge px-2 py-px rounded-full bg-emerald-950 text-emerald-400 border border-emerald-900/60">LIVE</span>
+                                </div>
+                                <p class="text-xs text-slate-400 -mt-0.5">Unbeatable AI</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teaser Visual -->
+                <div class="p-6 bg-slate-950 flex justify-center">
+                    <div class="w-full max-w-[210px]">
+                        <div onclick="miniTttInteract()" class="mini-board border border-slate-700 rounded-2xl p-2 cursor-pointer" id="mini-ttt-board">
+                            <div class="grid grid-cols-3 gap-1.5">
+                                <!-- Row 0 -->
+                                <div class="mini-cell aspect-square bg-slate-800 border border-slate-600 rounded-xl flex items-center justify-center text-sky-400" data-idx="0">X</div>
+                                <div class="mini-cell aspect-square bg-slate-800 border border-slate-600 rounded-xl flex items-center justify-center text-slate-400" data-idx="1"></div>
+                                <div class="mini-cell aspect-square bg-slate-800 border border-slate-600 rounded-xl flex items-center justify-center text-orange-400" data-idx="2">O</div>
+                                <!-- Row 1 -->
+                                <div class="mini-cell aspect-square bg-slate-800 border border-slate-600 rounded-xl flex items-center justify-center text-slate-400" data-idx="3"></div>
+                                <div class="mini-cell win aspect-square bg-slate-800 border border-emerald-600 rounded-xl flex items-center justify-center text-sky-400" data-idx="4">X</div>
+                                <div class="mini-cell aspect-square bg-slate-800 border border-slate-600 rounded-xl flex items-center justify-center text-orange-400" data-idx="5">O</div>
+                                <!-- Row 2 -->
+                                <div class="mini-cell aspect-square bg-slate-800 border border-slate-600 rounded-xl flex items-center justify-center text-orange-400" data-idx="6">O</div>
+                                <div class="mini-cell aspect-square bg-slate-800 border border-slate-600 rounded-xl flex items-center justify-center text-slate-400" data-idx="7"></div>
+                                <div class="mini-cell win aspect-square bg-slate-800 border border-emerald-600 rounded-xl flex items-center justify-center text-sky-400" data-idx="8">X</div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-1.5">
+                            <span class="text-[10px] text-emerald-400 font-medium">AI wins with perfect play →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 pb-6 flex-1 flex flex-col">
+                    <p class="text-slate-400 text-[15px] leading-relaxed">
+                        Classic 3×3 with a perfect Minimax AI. The computer will never lose. Play optimally and you will draw every single time.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-1.5 mt-4">
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-violet-950 text-violet-400">Minimax AI</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Persistent scores</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Keyboard (1-9, R)</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Win highlights</span>
+                    </div>
+                    
+                    <div class="mt-auto pt-5 flex items-center gap-x-3">
+                        <a href="examples/tic-tac-toe/" 
+                           class="flex-1 text-center px-5 py-3 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-950 font-semibold rounded-2xl text-sm transition-all">
+                            Play against the AI →
+                        </a>
+                        <a href="https://github.com/qanuj/learning-grok/blob/main/examples/tic-tac-toe/index.html" target="_blank"
+                           class="px-4 py-3 border border-slate-700 hover:bg-slate-800 rounded-2xl text-sm flex items-center justify-center transition-colors" title="View source">
+                            <i class="fa-solid fa-code"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="examples/" class="text-sm text-slate-400 hover:text-slate-200 inline-flex items-center gap-x-1.5">
+                Browse the full examples directory <i class="fa-solid fa-arrow-right fa-xs"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Features / What makes them special -->
+    <div class="max-w-6xl mx-auto px-6 pb-16">
+        <div class="text-center mb-10">
+            <div class="uppercase tracking-[2px] text-xs text-slate-500 font-medium">Why they feel special</div>
+            <h3 class="section-header text-3xl font-semibold tracking-tighter mt-1">Pure web, done right</h3>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="feature-card bg-slate-900 border border-slate-800 rounded-3xl p-5">
+                <div class="flex items-start gap-x-4">
+                    <div class="w-9 h-9 rounded-2xl bg-blue-600/10 text-blue-400 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-file-code text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold">Single-file HTML</div>
+                        <div class="text-sm text-slate-400 mt-1">Every demo is one .html file. Open it locally, host it anywhere, or push to GitHub Pages. No build pipeline, no node_modules, no complexity.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card bg-slate-900 border border-slate-800 rounded-3xl p-5">
+                <div class="flex items-start gap-x-4">
+                    <div class="w-9 h-9 rounded-2xl bg-emerald-600/10 text-emerald-400 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-rocket text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold">Instant GitHub Pages</div>
+                        <div class="text-sm text-slate-400 mt-1">Just enable Pages on the main branch. Your demos are live at a beautiful URL in under a minute. Works perfectly with .nojekyll.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card bg-slate-900 border border-slate-800 rounded-3xl p-5">
+                <div class="flex items-start gap-x-4">
+                    <div class="w-9 h-9 rounded-2xl bg-violet-600/10 text-violet-400 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-brain text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold">Real algorithms &amp; UX</div>
+                        <div class="text-sm text-slate-400 mt-1">Minimax game theory, state machines, keyboard handlers, localStorage persistence, smooth animations, and accessible controls.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card bg-slate-900 border border-slate-800 rounded-3xl p-5">
+                <div class="flex items-start gap-x-4">
+                    <div class="w-9 h-9 rounded-2xl bg-orange-600/10 text-orange-400 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-mobile-screen text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold">Production polish</div>
+                        <div class="text-sm text-slate-400 mt-1">Responsive, touch-friendly, keyboard-first, nice micro-interactions, copy/paste support, and thoughtful empty states.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card bg-slate-900 border border-slate-800 rounded-3xl p-5">
+                <div class="flex items-start gap-x-4">
+                    <div class="w-9 h-9 rounded-2xl bg-teal-600/10 text-teal-400 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold">Made to be studied</div>
+                        <div class="text-sm text-slate-400 mt-1">Clean, well-commented code. Great for learning vanilla JS patterns, game AI, UI architecture, and modern CSS.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card bg-slate-900 border border-slate-800 rounded-3xl p-5">
+                <div class="flex items-start gap-x-4">
+                    <div class="w-9 h-9 rounded-2xl bg-rose-600/10 text-rose-400 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-infinity text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="font-semibold">Timeless &amp; portable</div>
+                        <div class="text-sm text-slate-400 mt-1">No frameworks that will break. These will render beautifully in any browser from 2018 to 2035+. Truly future-proof demos.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Start -->
+    <div class="max-w-4xl mx-auto px-6 pb-20">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8">
+            <div class="flex items-center gap-x-3 mb-5">
+                <i class="fa-solid fa-terminal text-slate-400"></i>
+                <h4 class="font-semibold tracking-tight text-lg">Get started in seconds</h4>
+            </div>
+            
+            <div class="bg-black/40 border border-slate-800 rounded-2xl p-4 font-mono text-sm text-emerald-300 overflow-x-auto">
+                git clone https://github.com/qanuj/learning-grok.git<br>
+                cd learning-grok<br>
+                # Open index.html in your browser<br>
+                # Or enable GitHub Pages (main branch / root)
+            </div>
+            
+            <div class="mt-4 text-xs text-slate-400">
+                Every demo works when you just open the file. No server, no install, no drama.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="border-t border-slate-800 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto px-6 py-10 text-center">
+            <div class="text-sm text-slate-400 mb-3">
+                Want to add your own example?
+            </div>
+            <a href="https://github.com/qanuj/learning-grok" target="_blank"
+               class="inline-flex items-center gap-x-2 text-base font-medium text-white hover:text-blue-400 transition-colors">
+                <span>Fork the repo on GitHub</span>
+                <i class="fa-brands fa-github"></i>
+            </a>
+            
+            <div class="mt-8 text-[10px] text-slate-600">
+                All demos are standalone • MIT-style freedom to learn from and remix • Powered by curiosity + Grok
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Fallback if meta refresh is blocked
-        setTimeout(() => {
-            if (location.pathname === '/' || location.pathname === '/index.html') {
-                location.href = 'examples/';
+        // Tailwind CDN init (optional)
+        function initTailwind() {
+            // Using default config is perfect for this showcase
+        }
+
+        // Mini interactive calculator teaser (very lightweight)
+        let miniCalcValue = '1024';
+        let miniCalcOperator = null;
+        let miniCalcPrevious = null;
+        let miniCalcShouldReset = false;
+
+        function updateMiniDisplay(val) {
+            const display = document.getElementById('mini-calc-display');
+            if (!display) return;
+            display.textContent = val.length > 10 ? parseFloat(val).toExponential(2) : val;
+        }
+
+        function miniCalcAction(action) {
+            const display = document.getElementById('mini-calc-display');
+            if (!display) return;
+
+            if (action === 'C' || action === 'AC') {
+                miniCalcValue = '0';
+                miniCalcOperator = null;
+                miniCalcPrevious = null;
+                miniCalcShouldReset = false;
+                updateMiniDisplay(miniCalcValue);
+                return;
             }
-        }, 800);
+            
+            if (action === 'CE') {
+                miniCalcValue = '0';
+                updateMiniDisplay(miniCalcValue);
+                return;
+            }
+            
+            if (action === 'back') {
+                if (miniCalcValue.length > 1) {
+                    miniCalcValue = miniCalcValue.slice(0, -1);
+                } else {
+                    miniCalcValue = '0';
+                }
+                updateMiniDisplay(miniCalcValue);
+                return;
+            }
+            
+            if (['+', '-', '*', '/'].includes(action)) {
+                if (miniCalcOperator && !miniCalcShouldReset) {
+                    // chain
+                    const current = parseFloat(miniCalcValue);
+                    let result;
+                    switch (miniCalcOperator) {
+                        case '+': result = miniCalcPrevious + current; break;
+                        case '-': result = miniCalcPrevious - current; break;
+                        case '*': result = miniCalcPrevious * current; break;
+                        case '/': result = miniCalcPrevious / current || 0; break;
+                    }
+                    miniCalcPrevious = result;
+                    miniCalcValue = String(result);
+                } else {
+                    miniCalcPrevious = parseFloat(miniCalcValue);
+                }
+                miniCalcOperator = action;
+                miniCalcShouldReset = true;
+                updateMiniDisplay(miniCalcValue);
+                return;
+            }
+            
+            if (action === '=') {
+                if (miniCalcOperator && miniCalcPrevious !== null) {
+                    const current = parseFloat(miniCalcValue);
+                    let result;
+                    switch (miniCalcOperator) {
+                        case '+': result = miniCalcPrevious + current; break;
+                        case '-': result = miniCalcPrevious - current; break;
+                        case '*': result = miniCalcPrevious * current; break;
+                        case '/': result = miniCalcPrevious / current || 0; break;
+                    }
+                    miniCalcValue = String(result);
+                    miniCalcOperator = null;
+                    miniCalcPrevious = null;
+                    miniCalcShouldReset = true;
+                    updateMiniDisplay(miniCalcValue);
+                }
+                return;
+            }
+            
+            // number or decimal
+            if (miniCalcShouldReset) {
+                miniCalcValue = (action === '.') ? '0.' : action;
+                miniCalcShouldReset = false;
+            } else {
+                if (action === '.' && miniCalcValue.includes('.')) return;
+                miniCalcValue = miniCalcValue === '0' && action !== '.' ? action : miniCalcValue + action;
+            }
+            updateMiniDisplay(miniCalcValue);
+        }
+
+        // Mini Tic Tac Toe teaser interaction
+        let miniTttClicks = 0;
+        
+        function miniTttInteract() {
+            const board = document.getElementById('mini-ttt-board');
+            if (!board) return;
+            
+            miniTttClicks++;
+            
+            const cells = board.querySelectorAll('.mini-cell');
+            
+            if (miniTttClicks % 3 === 1) {
+                // Show "AI wins" message overlay style
+                cells.forEach((c, i) => {
+                    c.style.transition = 'all 0.2s ease';
+                    if (i === 0 || i === 4 || i === 8) {
+                        c.style.borderColor = '#10b981';
+                        c.style.backgroundColor = 'rgba(16,185,129,0.25)';
+                        c.style.color = '#34d399';
+                    }
+                });
+                
+                // Temporary message
+                const msg = document.createElement('div');
+                msg.className = 'text-center text-[10px] mt-2 text-emerald-400 font-medium';
+                msg.textContent = 'Perfect AI never loses!';
+                board.parentNode.appendChild(msg);
+                
+                setTimeout(() => {
+                    if (msg.parentNode) msg.parentNode.removeChild(msg);
+                    // reset styles lightly
+                    cells.forEach((c, i) => {
+                        if (i === 0 || i === 4 || i === 8) {
+                            c.style.borderColor = '#10b981';
+                            c.style.backgroundColor = 'rgba(16,185,129,0.18)';
+                        }
+                    });
+                }, 1400);
+            } else if (miniTttClicks % 3 === 2) {
+                // Reset board to initial state
+                const initial = ['X', '', 'O', '', 'X', 'O', 'O', '', 'X'];
+                cells.forEach((c, i) => {
+                    c.textContent = initial[i];
+                    c.style.backgroundColor = '';
+                    c.style.borderColor = i === 4 || i === 8 ? '#10b981' : '#475569';
+                    c.style.color = initial[i] === 'X' ? '#38bdf8' : (initial[i] === 'O' ? '#fb923c' : '');
+                });
+            } else {
+                // Fun: fill with random X/O briefly
+                cells.forEach((c) => {
+                    const r = Math.random();
+                    c.textContent = r > 0.6 ? 'X' : (r > 0.3 ? 'O' : '');
+                    c.style.color = c.textContent === 'X' ? '#38bdf8' : (c.textContent === 'O' ? '#fb923c' : '#64748b');
+                    c.style.backgroundColor = '';
+                    c.style.borderColor = '#475569';
+                });
+                
+                setTimeout(() => {
+                    const initial = ['X', '', 'O', '', 'X', 'O', 'O', '', 'X'];
+                    cells.forEach((c, i) => {
+                        c.textContent = initial[i];
+                        c.style.color = initial[i] === 'X' ? '#38bdf8' : (initial[i] === 'O' ? '#fb923c' : '');
+                        c.style.borderColor = i === 4 || i === 8 ? '#10b981' : '#475569';
+                        c.style.backgroundColor = i === 4 || i === 8 ? 'rgba(16,185,129,0.18)' : '';
+                    });
+                }, 650);
+            }
+        }
+
+        // Keyboard support for the mini calculator when the card is in view (fun extra)
+        function setupMiniKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                const calcCard = document.querySelector('#mini-calc-buttons');
+                if (!calcCard) return;
+                
+                // Only react if the showcase is reasonably in viewport (simple check)
+                const rect = calcCard.getBoundingClientRect();
+                if (rect.top > window.innerHeight || rect.bottom < 0) return;
+                
+                const key = e.key;
+                
+                if (key >= '0' && key <= '9') {
+                    miniCalcAction(key);
+                    e.preventDefault();
+                } else if (key === '.') {
+                    miniCalcAction('.');
+                    e.preventDefault();
+                } else if (['+', '-', '*', '/'].includes(key)) {
+                    miniCalcAction(key);
+                    e.preventDefault();
+                } else if (key === 'Enter' || key === '=') {
+                    miniCalcAction('=');
+                    e.preventDefault();
+                } else if (key === 'Backspace') {
+                    miniCalcAction('back');
+                    e.preventDefault();
+                } else if (key.toLowerCase() === 'c') {
+                    miniCalcAction('C');
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // Subtle nav background on scroll
+        function setupNav() {
+            const nav = document.querySelector('nav');
+            if (!nav) return;
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 40) {
+                    nav.classList.add('nav-scrolled');
+                } else {
+                    nav.classList.remove('nav-scrolled');
+                }
+            }, { passive: true });
+        }
+
+        // Boot everything
+        function initHome() {
+            initTailwind();
+            setupNav();
+            setupMiniKeyboard();
+            
+            // Initialize mini calc display
+            const display = document.getElementById('mini-calc-display');
+            if (display) display.textContent = miniCalcValue;
+            
+            // Make sure the mini ttt starts looking good
+            const tttBoard = document.getElementById('mini-ttt-board');
+            if (tttBoard) {
+                // Already styled in HTML, but we can enhance if needed
+            }
+            
+            // Bonus: clicking the hero title does a little easter egg
+            const title = document.querySelector('h1');
+            if (title) {
+                let clicks = 0;
+                title.style.cursor = 'default';
+                title.addEventListener('click', () => {
+                    clicks++;
+                    if (clicks === 5) {
+                        title.style.transition = 'transform 400ms cubic-bezier(0.34,1.56,0.64,1)';
+                        title.style.transform = 'scale(1.15) rotate(2deg)';
+                        setTimeout(() => {
+                            title.style.transform = '';
+                        }, 600);
+                        clicks = 0;
+                    }
+                });
+            }
+            
+            console.log('%c[learning-grok] Grand home page initialized. All demos are pure HTML.', 'color:#475569');
+        }
+
+        window.onload = initHome;
     </script>
 </body>
 </html>
