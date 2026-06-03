@@ -193,6 +193,14 @@
             text-transform: uppercase;
         }
 
+        /* Make logo circuits and A obey theme accent in both modes */
+        .hero svg [stroke="#22d3ee"],
+        .hero svg [fill="#22d3ee"],
+        .hero svg [stroke="#0ea5e9"] {
+            stroke: var(--accent) !important;
+            fill: var(--accent) !important;
+        }
+
         .specimens-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -237,7 +245,7 @@
             font-size: 9px;
             letter-spacing: 1.5px;
             padding: 9px 14px;
-            background: #0a0a0a;
+            background: var(--bg);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
@@ -247,7 +255,7 @@
 
         .specimen-visual {
             padding: 18px;
-            background: #050505;
+            background: var(--bg);
             border-bottom: 1px solid var(--border);
             position: relative;
         }
@@ -316,7 +324,7 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             background: var(--accent);
-            color: #050505;
+            color: var(--bg);
             border: none;
             padding: 11px 16px;
             font-weight: 600;
@@ -325,7 +333,7 @@
         }
 
         .engage-btn:hover {
-            background: #67f6ff;
+            background: color-mix(in srgb, var(--accent) 85%, white 15%);
             transform: translateY(-1px);
         }
 
@@ -344,8 +352,8 @@
         }
 
         .source-btn:hover {
-            background: #171717;
-            border-color: #3f3f3f;
+            background: color-mix(in srgb, var(--paper) 85%, black 8%);
+            border-color: var(--accent);
         }
 
         .field-notes {
@@ -381,12 +389,12 @@
 
         .protocol {
             font-family: var(--font-mono);
-            background: #0a0a0a;
+            background: var(--bg);
             border: 1px solid var(--border);
             padding: 18px 20px;
             font-size: 12.5px;
             line-height: 1.7;
-            color: #a3a3a3;
+            color: var(--text-muted);
         }
 
         .protocol .prompt {
@@ -639,21 +647,21 @@
               <!-- Circuit lines on D -->
               <g>
                 <path d="M18 12 L18 60" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M12 18 L12 54" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round"/>
-                <circle cx="18" cy="12" r="3" fill="#22d3ee"/>
-                <circle cx="12" cy="18" r="2.2" fill="#22d3ee"/>
-                <circle cx="18" cy="36" r="2.2" fill="#22d3ee"/>
-                <circle cx="12" cy="54" r="2.2" fill="#22d3ee"/>
+                <path d="M12 18 L12 54" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="18" cy="12" r="3" fill="var(--accent)"/>
+                <circle cx="12" cy="18" r="2.2" fill="var(--accent)"/>
+                <circle cx="18" cy="36" r="2.2" fill="var(--accent)"/>
+                <circle cx="12" cy="54" r="2.2" fill="var(--accent)"/>
                 <!-- Connection lines -->
-                <path d="M15 24 Q22 28 15 32" stroke="#22d3ee" stroke-width="1.5" fill="none"/>
-                <path d="M15 40 Q22 44 15 48" stroke="#22d3ee" stroke-width="1.5" fill="none"/>
+                <path d="M15 24 Q22 28 15 32" stroke="var(--accent)" stroke-width="1.5" fill="none"/>
+                <path d="M15 40 Q22 44 15 48" stroke="var(--accent)" stroke-width="1.5" fill="none"/>
               </g>
               <!-- Main D shape (white in dark, dark in light) -->
               <path d="M28 8 Q52 8 52 36 Q52 64 28 64 L28 8" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round"/>
               <!-- Inner A (blue gradient simulation with two paths) -->
-              <path d="M38 22 L52 62" fill="none" stroke="#22d3ee" stroke-width="9" stroke-linecap="round"/>
+              <path d="M38 22 L52 62" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round"/>
               <path d="M52 22 L38 62" fill="none" stroke="#0ea5e9" stroke-width="9" stroke-linecap="round"/>
-              <path d="M42 48 L48 48" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="round"/>
+              <path d="M42 48 L48 48" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>
               <!-- DAITYA text -->
               <text x="68" y="38" font-family="IBM Plex Mono, monospace" font-size="28" font-weight="700" fill="currentColor" letter-spacing="-1">DAITYA</text>
               <text x="68" y="54" font-family="Instrument Sans, system-ui" font-size="11" fill="#22d3ee" letter-spacing="2">AI ACADEMY</text>
@@ -955,9 +963,9 @@
                 cells.forEach((c, i) => {
                     c.style.transition = 'all .15s ease';
                     if ([0,4,8].includes(i)) {
-                        c.style.borderColor = '#4ade80';
-                        c.style.backgroundColor = '#052e16';
-                        c.style.color = '#4ade80';
+                        c.style.borderColor = 'var(--success)';
+                        c.style.backgroundColor = 'color-mix(in srgb, var(--paper) 80%, var(--success) 12%)';
+                        c.style.color = 'var(--success)';
                     }
                 });
             } else if (miniTttClicks === 2) {
@@ -965,23 +973,23 @@
                 cells.forEach((c, i) => {
                     c.textContent = initial[i];
                     c.style.backgroundColor = '';
-                    c.style.borderColor = [4,8].includes(i) ? '#4ade80' : '#262626';
-                    c.style.color = initial[i] === 'X' ? '#22d3ee' : (initial[i] === 'O' ? '#eab308' : '#e5e5e5');
+                    c.style.borderColor = [4,8].includes(i) ? 'var(--success)' : 'var(--border)';
+                    c.style.color = initial[i] === 'X' ? 'var(--accent)' : (initial[i] === 'O' ? 'var(--accent-warm)' : 'var(--text)');
                 });
             } else {
                 cells.forEach(c => {
                     c.textContent = Math.random() > 0.5 ? 'X' : 'O';
-                    c.style.color = c.textContent === 'X' ? '#22d3ee' : '#eab308';
+                    c.style.color = c.textContent === 'X' ? 'var(--accent)' : 'var(--accent-warm)';
                     c.style.backgroundColor = '';
-                    c.style.borderColor = '#262626';
+                    c.style.borderColor = 'var(--border)';
                 });
                 setTimeout(() => {
                     const initial = ['X','','O','','X','O','O','','X'];
                     cells.forEach((c, i) => {
                         c.textContent = initial[i];
-                        c.style.color = initial[i] === 'X' ? '#22d3ee' : (initial[i] === 'O' ? '#eab308' : '#e5e5e5');
-                        c.style.borderColor = [4,8].includes(i) ? '#4ade80' : '#262626';
-                        c.style.backgroundColor = [4,8].includes(i) ? '#052e16' : '';
+                        c.style.color = initial[i] === 'X' ? 'var(--accent)' : (initial[i] === 'O' ? 'var(--accent-warm)' : 'var(--text)');
+                        c.style.borderColor = [4,8].includes(i) ? 'var(--success)' : 'var(--border)';
+                        c.style.backgroundColor = [4,8].includes(i) ? 'color-mix(in srgb, var(--paper) 80%, var(--success) 12%)' : '';
                     });
                 }, 420);
             }
