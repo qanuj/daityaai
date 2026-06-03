@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLE-17 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --success:#34c759; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:360px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb, var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .grid { padding:16px; background:var(--bg); display:flex; flex-direction:column; gap:6px; align-items:center; }
+        .row { display:flex; gap:6px; }
+        .cell { width:48px; height:48px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:22px; font-weight:700; text-transform:uppercase; }
+        .keyboard { padding:10px 12px 14px; background:var(--bg); border-top:1px solid var(--border); }
+        .krow { display:flex; gap:4px; justify-content:center; margin-bottom:4px; }
+        .key { font-family:var(--font-mono); font-size:11px; min-width:26px; padding:8px 4px; background:var(--surface); border:1px solid var(--border); border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:18px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">WORDLE-17</span> / LEXICAL ORACLE</span>
+            </div>
+            <button id="theme-toggle" class="theme-toggle">LIGHT</button>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="keyboard" id="kb"></div>
+    </div>
+    <div class="footer">DAITYA AI ACADEMY • SPECIMEN-17 • LEARN. BUILD. LAUNCH.</div>
+
+    <script>
+        const WORDS = ['CRANE','SLATE','TRACE','PLANT','SHARK','BREAD','CLOUD','STORM','APPLE','GRAPE'];
+        let target = WORDS[Math.floor(Math.random()*WORDS.length)];
+        let row = 0, col = 0;
+        let board = Array(6).fill().map(()=>Array(5).fill(''));
+
+        function drawGrid() {
+            const g = document.getElementById('grid'); g.innerHTML='';
+            for (let r=0;r<6;r++) {
+                const rowEl = document.createElement('div'); rowEl.className='row';
+                for (let c=0;c<5;c++) {
+                    const cell = document.createElement('div'); cell.className='cell';
+                    cell.textContent = board[r][c];
+                    if (r < row) {
+                        const ch = board[r][c];
+                        if (target[c] === ch) cell.style.background='#30d158'; else if (target.includes(ch)) cell.style.background='#ff9f0a'; else cell.style.background='#3a3a3c';
+                        cell.style.color = '#000';
+                    }
+                    rowEl.appendChild(cell);
+                }
+                g.appendChild(rowEl);
+            }
+        }
+
+        function submit() {
+            const guess = board[row].join('');
+            if (guess.length < 5) return;
+            row++;
+            if (guess === target) { alert('You got it!'); }
+            else if (row === 6) { alert('The word was ' + target); }
+            drawGrid();
+            col = 0;
+        }
+
+        function press(k) {
+            if (k === 'ENTER') { submit(); return; }
+            if (k === 'BACK') { if (col>0) board[row][--col] = ''; drawGrid(); return; }
+            if (col < 5) { board[row][col++] = k.toUpperCase(); drawGrid(); }
+        }
+
+        function makeKB() {
+            const kb = document.getElementById('kb'); kb.innerHTML='';
+            const rows = ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
+            rows.forEach((r,i) => {
+                const row = document.createElement('div'); row.className='krow';
+                if (i===2) { const b = document.createElement('div'); b.className='key'; b.style.minWidth='40px'; b.textContent='ENTER'; b.onclick=()=>press('ENTER'); row.appendChild(b); }
+                r.split('').forEach(ch => { const k=document.createElement('div'); k.className='key'; k.textContent=ch; k.onclick=()=>press(ch); row.appendChild(k); });
+                if (i===2) { const b = document.createElement('div'); b.className='key'; b.style.minWidth='40px'; b.innerHTML='<i class="fa-solid fa-delete-left"></i>'; b.onclick=()=>press('BACK'); row.appendChild(b); }
+                kb.appendChild(row);
+            });
+        }
+
+        function initTheme() { const btn=document.getElementById('theme-toggle'); let s=localStorage.getItem('daitya-theme')||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark'); const a=t=>{document.documentElement.classList.toggle('light',t==='light');btn.textContent=t==='light'?'DARK':'LIGHT';localStorage.setItem('daitya-theme',t)}; a(s); btn.onclick=()=>a(document.documentElement.classList.contains('light')?'dark':'light'); }
+
+        function init(){ initTheme(); drawGrid(); makeKB(); document.addEventListener('keydown', e=>{ if (e.key==='Enter') submit(); else if (e.key==='Backspace') press('BACK'); else if (/^[a-zA-Z]$/.test(e.key)) press(e.key); }); console.log('%c[WORDLE-17] Lexical Oracle online.', 'color:#52525b'); }
+        window.onload = init;
+    </script>
+</body>
+</html>
