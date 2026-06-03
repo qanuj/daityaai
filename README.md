@@ -1,12 +1,41 @@
-# learning-grok
+# DaityaAI Academy
 
-Trying to learn Grok by building things.
+**DaityaAI** — Learn. Build. Launch.
 
-## Examples
+A collection of pure, self-contained web instruments and demos for the Daitya AI Academy.
+
+These are production-grade, single-file HTML experiments designed to teach real frontend engineering, algorithms, and creative UI/UX — with zero build steps and zero dependencies beyond the browser.
+
+## The Field Log
 
 Standalone demos that deploy instantly with **GitHub Pages**.
 
-- [Calculator](./examples/calculator/) — Pure HTML + Tailwind CDN + vanilla JS. Full keyboard support.
-- [Tic Tac Toe](./examples/tic-tac-toe/) — Unbeatable AI using Minimax. Computer will never lose. Single-file, keyboard support (1-9, R).
-- [To-Do List](./examples/todo-list/) — Fast local to-do app with drag-to-reorder, inline editing, filters &amp; persistence.
-- More examples coming soon...
+- [Precision Calculator](./examples/calculator/) — Full arithmetic engine with keyboard, chaining, and telemetry. A classic lab instrument reimagined.
+- [Strategic Matrix](./examples/tic-tac-toe/) — 3×3 game with unbeatable Minimax AI. The machine never loses.
+- [Task Vector Ledger](./examples/todo-list/) — High-precision persistent todo with drag-reorder, inline editing, and filters.
+- More instruments coming soon...
+
+### Quick start
+
+```bash
+git clone https://github.com/qanuj/daityaai.git
+cd daityaai
+# Open any .html file directly in your browser
+# Or enable GitHub Pages (main branch / root) for instant live versions
+```
+
+Visit the live archive: https://qanuj.github.io/daityaai/
+
+Each specimen is a single self-contained HTML file — open it, study the code, fork it, launch your own version.
+
+## About DaityaAI Academy
+
+We believe the best way to master AI and frontend is by building real, beautiful things with first principles.
+
+These experiments are part of our "Field Log" — raw, precise, and designed to be studied.
+
+**LEARN. BUILD. LAUNCH.**
+
+---
+
+*Branding and logo © DaityaAI Academy. All demos are open for learning and remixing.*
