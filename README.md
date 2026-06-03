@@ -13,7 +13,7 @@ These are production-grade, single-file HTML experiments designed to teach real 
 Standalone demos that deploy instantly with **GitHub Pages**.
 
 - [Precision Calculator](./examples/calculator/) — Full arithmetic engine with keyboard, chaining, and telemetry. A classic lab instrument reimagined.
-- [Strategic Matrix](./examples/tic-tac-toe/) — 3×3 game with unbeatable Minimax AI. The machine never loses.
+- [Strategic Matrix](./tic-tac-toe/) — 3×3 game with unbeatable Minimax AI. The machine never loses.
 - [Task Vector Ledger](./examples/todo-list/) — High-precision persistent todo with drag-reorder, inline editing, and filters.
 - More instruments coming soon...
 

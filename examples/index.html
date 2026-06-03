@@ -227,7 +227,7 @@
         </a>
 
         <!-- Specimen 02 -->
-        <a href="tic-tac-toe/" class="entry">
+        <a href="../tic-tac-toe/" class="entry">
             <div class="entry-header">
                 <div><span class="entry-sn">SPECIMEN-02</span> / STRATEGY</div>
                 <div>REV 01 • LIVE</div>
@@ -272,12 +272,12 @@
                 html.classList.remove('light');
                 if (btn) btn.textContent = 'LIGHT';
             }
-            localStorage.setItem('grok-theme', theme);
+            localStorage.setItem('daitya-theme', theme);
         }
 
         function initTheme() {
             const btn = document.getElementById('theme-toggle');
-            let saved = localStorage.getItem('grok-theme');
+            let saved = localStorage.getItem('daitya-theme');
             if (!saved) {
                 saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
             }
