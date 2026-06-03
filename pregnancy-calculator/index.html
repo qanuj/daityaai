@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PREGNANCY-44 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:380px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb, var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .inps { padding:14px 18px; background:var(--bg); display:grid; grid-template-columns:1fr; gap:8px; }
+        .field label { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:3px; }
+        .field input { font-family:var(--font-mono); font-size:15px; width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:9px 11px; border-radius:10px; }
+        .out { padding:16px 18px; background:var(--bg); border-bottom:1px solid var(--border); }
+        .result { font-family:var(--font-mono); font-size:22px; font-weight:600; color:var(--accent); }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">PREGNANCY-44</span> / PREGNANCY DUE DATE</span>
+            </div>
+            <button id="theme-toggle" class="theme-toggle">LIGHT</button>
+        </div>
+
+        <div class="inps">
+            <div class="field"><label>LAST MENSTRUAL PERIOD (LMP)</label><input id="lmp" type="date"></div>
+        </div>
+
+        <div class="out">
+            <div style="color:var(--text-muted);font-size:10px;">ESTIMATED DUE DATE</div>
+            <div id="due" class="result">—</div>
+            <div id="info" style="margin-top:8px;font-size:12px;color:var(--text-muted);"></div>
+        </div>
+    </div>
+    <div class="footer">DAITYA AI ACADEMY • SPECIMEN-44 • LEARN. BUILD. LAUNCH.</div>
+
+    <script>
+        function calc() {
+            const lmpStr = document.getElementById('lmp').value;
+            if (!lmpStr) return;
+            const lmp = new Date(lmpStr);
+            const due = new Date(lmp);
+            due.setDate(due.getDate() + 280); // 40 weeks
+
+            const today = new Date();
+            const diff = Math.ceil((due - today) / (1000*3600*24));
+            const weeks = Math.floor((today - lmp) / (1000*3600*24*7));
+
+            document.getElementById('due').textContent = due.toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
+            document.getElementById('info').innerHTML = `You are approximately <strong>${weeks}</strong> weeks pregnant.<br>Days to due date: <strong>${diff}</strong>`;
+        }
+
+        function setup() {
+            document.getElementById('lmp').addEventListener('input', calc);
+            const d = new Date();
+            d.setMonth(d.getMonth() - 6);
+            document.getElementById('lmp').value = d.toISOString().slice(0,10);
+            calc();
+        }
+
+        function applyTheme(th){const h=document.documentElement,b=document.getElementById('theme-toggle');if(th==='light'){h.classList.add('light');if(b)b.textContent='DARK';}else{h.classList.remove('light');if(b)b.textContent='LIGHT';}localStorage.setItem('daitya-theme',th);}
+        function initTheme(){const b=document.getElementById('theme-toggle');let s=localStorage.getItem('daitya-theme')||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');applyTheme(s);if(b)b.addEventListener('click',()=>applyTheme(document.documentElement.classList.contains('light')?'dark':'light'));}
+
+        function init(){initTheme();setup();}
+        window.onload=init;
+    </script>
+</body>
+</html>

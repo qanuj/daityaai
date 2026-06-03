@@ -56,6 +56,18 @@ Standalone demos that deploy instantly with **GitHub Pages**.
 - [Prose Lens (MD-36)](./markdown-previewer/)
 - [Pattern Probe (REGEX-37)](./regex-tester/)
 
+### High-Traffic SEO Calculators (38-47)
+- [SIP Return Calculator (SIP-RETURN-38)](./sip-return-calculator/)
+- [Home Loan EMI Calculator (HOME-LOAN-39)](./home-loan-emi-calculator/)
+- [GST Calculator India (GST-INDIA-40)](./gst-calculator-india/)
+- [Percentage Calculator (PERCENT-41)](./percentage-calculator/)
+- [Currency Converter (CURRENCY-42)](./currency-converter/)
+- [Calorie Calculator (CALORIE-43)](./calorie-calculator/)
+- [Pregnancy Due Date (PREGNANCY-44)](./pregnancy-calculator/)
+- [Retirement Calculator (RETIRE-45)](./retirement-calculator/)
+- [Compound Interest (COMPOUND-46)](./compound-interest-calculator/)
+- [Income Tax Calculator India (TAX-INDIA-47)](./income-tax-calculator/)
+
 ### Quick start
 
 ```bash

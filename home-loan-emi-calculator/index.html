@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME-LOAN-39 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:420px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb,var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .status { display:flex; align-items:center; gap:6px; color:var(--success); }
+        .status-dot { width:6px; height:6px; background:var(--success); border-radius:50%; box-shadow:0 0 0 2px rgba(48,209,88,.25); }
+        .inps { padding:16px 18px 6px; background:var(--bg); display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .field label { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px; }
+        .field input { font-family:var(--font-mono); font-size:15px; width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:9px 11px; border-radius:10px; }
+        .out { padding:14px 18px; background:var(--bg); border-bottom:1px solid var(--border); }
+        .row { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; }
+        .row .l { color:var(--text-muted); }
+        .row .v { font-family:var(--font-mono); font-weight:600; }
+        .big { font-size:20px; color:var(--accent); }
+        .schedule { padding:12px 16px; background:var(--surface); border-top:1px solid var(--border); max-height:160px; overflow:auto; font-family:var(--font-mono); font-size:10px; }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">HOME-LOAN-39</span> / HOME LOAN EMI</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="status"><span class="status-dot"></span><span>OPERATIONAL</span></div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="inps">
+            <div class="field"><label>LOAN AMOUNT (₹)</label><input id="principal" type="number" value="5000000" step="10000"></div>
+            <div class="field"><label>INTEREST RATE (% P.A.)</label><input id="rate" type="number" value="8.5" step="0.1"></div>
+            <div class="field"><label>TENURE (YEARS)</label><input id="years" type="number" value="20" step="1"></div>
+            <div class="field"><label>PREPAYMENT (₹)</label><input id="prepay" type="number" value="0" step="10000"></div>
+        </div>
+
+        <div class="out">
+            <div class="row"><div class="l">MONTHLY EMI</div><div id="emi" class="v big">—</div></div>
+            <div class="row"><div class="l">TOTAL PAYMENT</div><div id="totalpay" class="v">—</div></div>
+            <div class="row"><div class="l">TOTAL INTEREST</div><div id="interest" class="v">—</div></div>
+            <div class="row"><div class="l">INTEREST SAVED (PREPAY)</div><div id="saved" class="v" style="color:var(--success);">—</div></div>
+        </div>
+
+        <div class="schedule" id="schedule">
+            <div style="color:var(--text-muted);margin-bottom:4px;">FIRST 6 INSTALMENTS</div>
+            <div id="schedule-body" style="font-size:9.5px;"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-39 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        function calculateEMI() {
+            const P = parseFloat(document.getElementById('principal').value) || 0;
+            const annualRate = parseFloat(document.getElementById('rate').value) || 0;
+            const years = parseFloat(document.getElementById('years').value) || 0;
+            let prepay = parseFloat(document.getElementById('prepay').value) || 0;
+
+            const N = years * 12;
+            const r = annualRate / 12 / 100;
+
+            if (P <= 0 || N <= 0) {
+                clearResults();
+                return;
+            }
+
+            let emi = P * r * Math.pow(1 + r, N) / (Math.pow(1 + r, N) - 1);
+            let totalPay = emi * N;
+            let totalInterest = totalPay - P;
+
+            // Simple prepayment effect (reduces principal early)
+            let interestSaved = 0;
+            if (prepay > 0) {
+                const effectiveP = Math.max(0, P - prepay);
+                const newEmi = effectiveP * r * Math.pow(1 + r, N) / (Math.pow(1 + r, N) - 1);
+                const newTotal = newEmi * N;
+                interestSaved = totalInterest - (newTotal - effectiveP);
+                totalInterest = newTotal - effectiveP;
+                totalPay = newTotal;
+                emi = newEmi;
+            }
+
+            document.getElementById('emi').textContent = '₹' + Math.round(emi).toLocaleString('en-IN');
+            document.getElementById('totalpay').textContent = '₹' + Math.round(totalPay).toLocaleString('en-IN');
+            document.getElementById('interest').textContent = '₹' + Math.round(totalInterest).toLocaleString('en-IN');
+            document.getElementById('saved').textContent = prepay > 0 ? '₹' + Math.round(interestSaved).toLocaleString('en-IN') : '—';
+
+            // First 6 payments schedule (simplified)
+            let bal = P - prepay;
+            let html = '';
+            for (let i = 1; i <= Math.min(6, N); i++) {
+                const intPart = bal * r;
+                const prinPart = emi - intPart;
+                bal = Math.max(0, bal - prinPart);
+                html += `<div style="display:flex;justify-content:space-between;margin:1px 0;"><span>#${i}</span><span>₹${Math.round(prinPart).toLocaleString('en-IN')}</span><span>₹${Math.round(intPart).toLocaleString('en-IN')}</span><span>₹${Math.round(bal).toLocaleString('en-IN')}</span></div>`;
+            }
+            document.getElementById('schedule-body').innerHTML = html;
+        }
+
+        function clearResults() {
+            ['emi','totalpay','interest','saved'].forEach(id => document.getElementById(id).textContent = '—');
+            document.getElementById('schedule-body').innerHTML = '';
+        }
+
+        function setup() {
+            ['principal','rate','years','prepay'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', calculateEMI);
+            });
+            calculateEMI();
+        }
+
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') { html.classList.add('light'); if (btn) btn.textContent = 'DARK'; }
+            else { html.classList.remove('light'); if (btn) btn.textContent = 'LIGHT'; }
+            localStorage.setItem('daitya-theme', theme);
+        }
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('daitya-theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            applyTheme(saved);
+            if (btn) btn.addEventListener('click', () => {
+                const isLight = document.documentElement.classList.contains('light');
+                applyTheme(isLight ? 'dark' : 'light');
+            });
+        }
+
+        function init() {
+            initTheme();
+            setup();
+            console.log('%c[HOME-LOAN-39] Home Loan EMI Calculator online.', 'color:#52525b');
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>

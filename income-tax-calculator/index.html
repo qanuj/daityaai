@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAX-INDIA-47 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:420px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb,var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .status { display:flex; align-items:center; gap:6px; color:var(--success); }
+        .status-dot { width:6px; height:6px; background:var(--success); border-radius:50%; box-shadow:0 0 0 2px rgba(48,209,88,.25); }
+        .inps { padding:16px 18px 8px; background:var(--bg); display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .field label { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px; }
+        .field input { font-family:var(--font-mono); font-size:15px; width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:9px 11px; border-radius:10px; }
+        .out { padding:16px 18px; background:var(--bg); border-bottom:1px solid var(--border); }
+        .row { display:flex; justify-content:space-between; padding:5px 0; font-size:13px; }
+        .row .l { color:var(--text-muted); }
+        .row .v { font-family:var(--font-mono); font-weight:600; }
+        .big { font-size:22px; color:var(--accent); }
+        .slab { padding:12px 18px; background:var(--surface); border-top:1px solid var(--border); font-family:var(--font-mono); font-size:10px; }
+        .slab-row { display:flex; justify-content:space-between; padding:2px 0; }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">TAX-INDIA-47</span> / INCOME TAX CALCULATOR INDIA</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="status"><span class="status-dot"></span><span>OPERATIONAL</span></div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="inps">
+            <div class="field"><label>GROSS TOTAL INCOME (₹)</label><input id="income" type="number" value="1200000" step="10000"></div>
+            <div class="field"><label>OTHER INCOME (₹)</label><input id="other" type="number" value="0" step="1000"></div>
+            <div class="field"><label>80C DEDUCTIONS (₹)</label><input id="ded80c" type="number" value="150000" step="1000"></div>
+            <div class="field"><label>OTHER DEDUCTIONS (₹)</label><input id="otherded" type="number" value="50000" step="1000"></div>
+            <div class="field"><label>AGE</label>
+                <select id="age" style="font-family:var(--font-mono);font-size:14px;width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;">
+                    <option value="below60">Below 60</option>
+                    <option value="senior">60-80 (Senior)</option>
+                    <option value="supersenior">Above 80</option>
+                </select>
+            </div>
+            <div class="field"><label></label><button id="calc" style="margin-top:20px;width:100%;font-family:var(--font-mono);font-size:11px;padding:9px;border-radius:10px;border:1px solid var(--accent);background:color-mix(in srgb,var(--surface)65%,var(--accent)22%);color:var(--text);">CALCULATE TAX</button></div>
+        </div>
+
+        <div class="out">
+            <div class="row"><div class="l">TAXABLE INCOME</div><div id="taxable" class="v">—</div></div>
+            <div class="row"><div class="l">INCOME TAX</div><div id="tax" class="v">—</div></div>
+            <div class="row"><div class="l">HEALTH &amp; EDUCATION CESS (4%)</div><div id="cess" class="v">—</div></div>
+            <div class="row big"><div class="l">TOTAL TAX PAYABLE</div><div id="totaltax" class="v">—</div></div>
+            <div class="row" style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px;"><div class="l">EFFECTIVE TAX RATE</div><div id="effrate" class="v" style="color:var(--text-muted);">—</div></div>
+        </div>
+
+        <div class="slab" id="slabs">
+            <!-- populated by JS -->
+        </div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-47 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        // New Tax Regime slabs FY 2025-26 (approximate current)
+        const SLABS = [
+            { min: 0, max: 300000, rate: 0 },
+            { min: 300000, max: 700000, rate: 0.05 },
+            { min: 700000, max: 1000000, rate: 0.10 },
+            { min: 1000000, max: 1200000, rate: 0.15 },
+            { min: 1200000, max: 1500000, rate: 0.20 },
+            { min: 1500000, max: Infinity, rate: 0.30 }
+        ];
+
+        function calcTax() {
+            let income = parseFloat(document.getElementById('income').value) || 0;
+            let other = parseFloat(document.getElementById('other').value) || 0;
+            let ded80c = Math.min(parseFloat(document.getElementById('ded80c').value) || 0, 150000);
+            let otherded = parseFloat(document.getElementById('otherded').value) || 0;
+            const ageType = document.getElementById('age').value;
+
+            let gross = income + other;
+            let standardDed = 50000; // Current standard deduction
+
+            // Simplified: new regime has limited deductions
+            let taxable = Math.max(0, gross - standardDed - otherded);
+
+            // For new regime, 80C etc have limited impact (mostly for old regime). We still apply some for illustration.
+            taxable = Math.max(0, taxable - ded80c * 0.3); // partial effect for demo
+
+            let tax = 0;
+            let slabDetails = [];
+
+            for (let slab of SLABS) {
+                if (taxable > slab.min) {
+                    let taxableInSlab = Math.min(taxable, slab.max) - slab.min;
+                    let slabTax = taxableInSlab * slab.rate;
+                    tax += slabTax;
+                    if (taxableInSlab > 0) {
+                        slabDetails.push({
+                            range: `₹${(slab.min/100000).toFixed(1)}L - ${slab.max === Infinity ? 'Above' : '₹' + (slab.max/100000).toFixed(1) + 'L'}`,
+                            rate: (slab.rate * 100) + '%',
+                            tax: Math.round(slabTax)
+                        });
+                    }
+                }
+            }
+
+            // Cess
+            let cess = tax * 0.04;
+            let totalTax = Math.round(tax + cess);
+
+            // Update UI
+            document.getElementById('taxable').textContent = '₹' + Math.round(taxable).toLocaleString('en-IN');
+            document.getElementById('tax').textContent = '₹' + Math.round(tax).toLocaleString('en-IN');
+            document.getElementById('cess').textContent = '₹' + Math.round(cess).toLocaleString('en-IN');
+            document.getElementById('totaltax').textContent = '₹' + totalTax.toLocaleString('en-IN');
+            document.getElementById('effrate').textContent = gross > 0 ? ((totalTax / gross) * 100).toFixed(1) + '%' : '—';
+
+            // Slabs
+            let html = '<div style="margin-bottom:6px;color:var(--text-muted);">TAX SLAB BREAKDOWN (NEW REGIME)</div>';
+            slabDetails.forEach(s => {
+                html += `<div class="slab-row"><span>${s.range} @ ${s.rate}</span><span>₹${s.tax.toLocaleString('en-IN')}</span></div>`;
+            });
+            document.getElementById('slabs').innerHTML = html;
+        }
+
+        function setup() {
+            ['income','other','ded80c','otherded','age'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', calcTax);
+            });
+            document.getElementById('calc').addEventListener('click', calcTax);
+
+            // initial
+            calcTax();
+        }
+
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') {
+                html.classList.add('light');
+                if (btn) btn.textContent = 'DARK';
+            } else {
+                html.classList.remove('light');
+                if (btn) btn.textContent = 'LIGHT';
+            }
+            localStorage.setItem('daitya-theme', theme);
+        }
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('daitya-theme');
+            if (!saved) {
+                saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            applyTheme(saved);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('light');
+                    applyTheme(isLight ? 'dark' : 'light');
+                });
+            }
+        }
+
+        function init() {
+            initTheme();
+            setup();
+            console.log('%c[TAX-INDIA-47] Income Tax Calculator India online.', 'color:#52525b');
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>

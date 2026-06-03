@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RETIRE-45 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:380px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb, var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .inps { padding:14px 18px 6px; background:var(--bg); display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .field label { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:3px; }
+        .field input { font-family:var(--font-mono); font-size:14px; width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:10px; }
+        .out { padding:14px 18px; background:var(--bg); border-bottom:1px solid var(--border); }
+        .row { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; }
+        .row .l { color:var(--text-muted); }
+        .row .v { font-family:var(--font-mono); font-weight:600; }
+        .big { font-size:20px; color:var(--accent); }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">RETIRE-45</span> / RETIREMENT CALCULATOR</span>
+            </div>
+            <button id="theme-toggle" class="theme-toggle">LIGHT</button>
+        </div>
+
+        <div class="inps">
+            <div class="field"><label>CURRENT AGE</label><input id="age" type="number" value="35"></div>
+            <div class="field"><label>RETIREMENT AGE</label><input id="retire" type="number" value="60"></div>
+            <div class="field"><label>CURRENT SAVINGS (₹)</label><input id="current" type="number" value="2500000"></div>
+            <div class="field"><label>MONTHLY CONTRIBUTION (₹)</label><input id="monthly" type="number" value="25000"></div>
+            <div class="field"><label>EXPECTED RETURN (%)</label><input id="return" type="number" value="10"></div>
+            <div class="field"><label>INFLATION (%)</label><input id="inf" type="number" value="6"></div>
+        </div>
+
+        <div class="out">
+            <div class="row"><div class="l">REQUIRED CORPUS AT RETIREMENT</div><div id="corpus" class="v big">—</div></div>
+            <div class="row"><div class="l">PROJECTED SAVINGS</div><div id="projected" class="v">—</div></div>
+            <div class="row"><div class="l">SHORTFALL / SURPLUS</div><div id="gap" class="v">—</div></div>
+        </div>
+    </div>
+    <div class="footer">DAITYA AI ACADEMY • SPECIMEN-45 • LEARN. BUILD. LAUNCH.</div>
+
+    <script>
+        function calc() {
+            const age = parseFloat(document.getElementById('age').value) || 0;
+            const retireAge = parseFloat(document.getElementById('retire').value) || 0;
+            const current = parseFloat(document.getElementById('current').value) || 0;
+            const monthly = parseFloat(document.getElementById('monthly').value) || 0;
+            const ret = parseFloat(document.getElementById('return').value) / 100 / 12;
+            const inf = parseFloat(document.getElementById('inf').value) / 100 / 12;
+
+            const months = (retireAge - age) * 12;
+            if (months <= 0) return;
+
+            // FV of current savings
+            const fvCurrent = current * Math.pow(1 + ret, months);
+            // FV of monthly SIP
+            const fvSip = monthly * (Math.pow(1 + ret, months) - 1) / ret;
+
+            const projected = fvCurrent + fvSip;
+            // Simple required (assume 25x annual expense, here placeholder 40L real)
+            const required = 40000000 * Math.pow(1 + inf * 12, retireAge - age); // rough
+
+            document.getElementById('corpus').textContent = '₹' + Math.round(required).toLocaleString('en-IN');
+            document.getElementById('projected').textContent = '₹' + Math.round(projected).toLocaleString('en-IN');
+            const gap = projected - required;
+            document.getElementById('gap').textContent = (gap >= 0 ? 'Surplus ₹' : 'Shortfall ₹') + Math.abs(Math.round(gap)).toLocaleString('en-IN');
+            document.getElementById('gap').style.color = gap >= 0 ? 'var(--success)' : '#ff6b6b';
+        }
+
+        function setup() {
+            ['age','retire','current','monthly','return','inf'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+            calc();
+        }
+
+        function applyTheme(th){const h=document.documentElement,b=document.getElementById('theme-toggle');if(th==='light'){h.classList.add('light');if(b)b.textContent='DARK';}else{h.classList.remove('light');if(b)b.textContent='LIGHT';}localStorage.setItem('daitya-theme',th);}
+        function initTheme(){const b=document.getElementById('theme-toggle');let s=localStorage.getItem('daitya-theme')||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');applyTheme(s);if(b)b.addEventListener('click',()=>applyTheme(document.documentElement.classList.contains('light')?'dark':'light'));}
+
+        function init(){initTheme();setup();}
+        window.onload=init;
+    </script>
+</body>
+</html>

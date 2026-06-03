@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP-RETURN-38 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:420px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb,var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .status { display:flex; align-items:center; gap:6px; color:var(--success); }
+        .status-dot { width:6px; height:6px; background:var(--success); border-radius:50%; box-shadow:0 0 0 2px rgba(48,209,88,.25); }
+        .inps { padding:14px 18px 6px; background:var(--bg); display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .field label { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:3px; }
+        .field input { font-family:var(--font-mono); font-size:14px; width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:10px; }
+        .out { padding:14px 18px; background:var(--bg); border-bottom:1px solid var(--border); }
+        .row { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; }
+        .row .l { color:var(--text-muted); }
+        .row .v { font-family:var(--font-mono); font-weight:600; }
+        .big { font-size:21px; color:var(--accent); }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">SIP-RETURN-38</span> / SIP RETURN CALCULATOR</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="status"><span class="status-dot"></span><span>OPERATIONAL</span></div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="inps">
+            <div class="field"><label>MONTHLY SIP (₹)</label><input id="p" type="number" value="10000" step="500"></div>
+            <div class="field"><label>EXPECTED RETURN (%)</label><input id="r" type="number" value="12" step="0.5"></div>
+            <div class="field"><label>YEARS</label><input id="y" type="number" value="15" step="1"></div>
+            <div class="field"><label>ANNUAL STEP-UP (%)</label><input id="step" type="number" value="10" step="1"></div>
+            <div class="field"><label>INFLATION (%)</label><input id="inf" type="number" value="6" step="0.5"></div>
+            <div class="field"><label></label><button id="calc" style="margin-top:18px;width:100%;font-family:var(--font-mono);font-size:11px;padding:8px;border-radius:10px;border:1px solid var(--accent);background:color-mix(in srgb,var(--surface)65%,var(--accent)22%);">CALCULATE</button></div>
+        </div>
+
+        <div class="out">
+            <div class="row"><div class="l">FUTURE VALUE (NOMINAL)</div><div id="fv" class="v big">—</div></div>
+            <div class="row"><div class="l">REAL VALUE (INFLATION ADJ.)</div><div id="real" class="v">—</div></div>
+            <div class="row"><div class="l">TOTAL INVESTED</div><div id="invested" class="v">—</div></div>
+            <div class="row"><div class="l">WEALTH GAINED</div><div id="gain" class="v">—</div></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-38 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        function calculate() {
+            const P = parseFloat(document.getElementById('p').value) || 0;
+            const r = parseFloat(document.getElementById('r').value) / 100 / 12;
+            const years = parseFloat(document.getElementById('y').value) || 0;
+            const stepUp = parseFloat(document.getElementById('step').value) / 100;
+            const inf = parseFloat(document.getElementById('inf').value) / 100;
+
+            const n = years * 12;
+            let totalInvested = 0;
+            let fv = 0;
+            let currentP = P;
+
+            for (let i = 1; i <= n; i++) {
+                fv = fv * (1 + r) + currentP;
+                totalInvested += currentP;
+                if (i % 12 === 0) {
+                    currentP *= (1 + stepUp);
+                }
+            }
+
+            const realFv = fv / Math.pow(1 + inf, years);
+
+            document.getElementById('fv').textContent = '₹' + Math.round(fv).toLocaleString('en-IN');
+            document.getElementById('real').textContent = '₹' + Math.round(realFv).toLocaleString('en-IN');
+            document.getElementById('invested').textContent = '₹' + Math.round(totalInvested).toLocaleString('en-IN');
+            document.getElementById('gain').textContent = '₹' + Math.round(fv - totalInvested).toLocaleString('en-IN');
+        }
+
+        function setup() {
+            ['p','r','y','step','inf'].forEach(id => document.getElementById(id).addEventListener('input', calculate));
+            document.getElementById('calc').addEventListener('click', calculate);
+            calculate();
+        }
+
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') { html.classList.add('light'); if (btn) btn.textContent = 'DARK'; }
+            else { html.classList.remove('light'); if (btn) btn.textContent = 'LIGHT'; }
+            localStorage.setItem('daitya-theme', theme);
+        }
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('daitya-theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            applyTheme(saved);
+            if (btn) btn.addEventListener('click', () => {
+                const isLight = document.documentElement.classList.contains('light');
+                applyTheme(isLight ? 'dark' : 'light');
+            });
+        }
+
+        function init() {
+            initTheme();
+            setup();
+            console.log('%c[SIP-RETURN-38] SIP Return Calculator online.', 'color:#52525b');
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>
