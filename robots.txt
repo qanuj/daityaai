@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+
+# AI/LLM crawlers
+Allow: /llms.txt
+
 Sitemap: https://qanuj.github.io/daityaai/sitemap.xml
