@@ -10,30 +10,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg: #050505;
-            --paper: #0f0f0f;
-            --text: #e5e5e5;
-            --text-muted: #737373;
-            --accent: #22d3ee;
-            --accent-warm: #eab308;
-            --success: #4ade80;
-            --border: #262626;
-            --grid: rgba(255, 255, 255, 0.035);
+            /* Apple-inspired elegant dark (rich, not raw) */
+            --bg: #000000;
+            --surface: #1c1c1e;
+            --paper: #2c2c2e;
+            --text: #f5f5f7;
+            --text-muted: #8e8e93;
+            --accent: #0a84ff;
+            --accent-warm: #ff9f0a;
+            --success: #30d158;
+            --border: #38383a;
+            --grid: rgba(255,255,255,0.04);
             
             --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
             --font-body: 'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            
+            --radius: 16px;
+            --radius-lg: 22px;
         }
 
         html.light {
-            --bg: #f8f7f4;
+            /* Apple-inspired clean light */
+            --bg: #f2f2f7;
+            --surface: #ffffff;
             --paper: #ffffff;
-            --text: #111111;
-            --text-muted: #52525b;
-            --accent: #0284c8;
-            --accent-warm: #854d0e;
-            --success: #15803d;
-            --border: #d1d5db;
-            --grid: rgba(0, 0, 0, 0.055);
+            --text: #000000;
+            --text-muted: #6e6e73;
+            --accent: #007aff;
+            --accent-warm: #ff9500;
+            --success: #34c759;
+            --border: #c6c6c8;
+            --grid: rgba(0,0,0,0.05);
         }
 
         * {
@@ -43,13 +50,9 @@
         body {
             margin: 0;
             background-color: var(--bg);
-            background-image: 
-                linear-gradient(var(--grid) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-            background-size: 22px 22px;
             color: var(--text);
             font-family: var(--font-body);
-            line-height: 1.5;
+            line-height: 1.55;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -63,10 +66,10 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: color-mix(in srgb, var(--bg) 92%, transparent);
-            backdrop-filter: blur(12px);
+            background: color-mix(in srgb, var(--bg) 88%, transparent);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            padding: 10px 0;
+            padding: 8px 0;
         }
 
         .lab-header-inner {
@@ -150,7 +153,6 @@
 
         .hero {
             padding: 72px 0 48px;
-            border-bottom: 1px solid var(--border);
         }
 
         .hero-id {
@@ -223,29 +225,27 @@
         .specimen {
             background: var(--paper);
             border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
+            box-shadow: 0 8px 30px -10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), 
+                        box-shadow 0.2s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .specimen::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--accent), transparent);
-            opacity: 0.3;
+        .specimen:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
         }
 
         .specimen-header {
             font-family: var(--font-mono);
             font-size: 9px;
             letter-spacing: 1.5px;
-            padding: 9px 14px;
-            background: var(--bg);
+            padding: 10px 16px;
+            background: var(--surface);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
@@ -254,8 +254,8 @@
         }
 
         .specimen-visual {
-            padding: 18px;
-            background: var(--bg);
+            padding: 20px;
+            background: var(--surface);
             border-bottom: 1px solid var(--border);
             position: relative;
         }
@@ -273,7 +273,7 @@
         }
 
         .specimen-body {
-            padding: 18px 16px 12px;
+            padding: 20px 18px 16px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -281,18 +281,18 @@
 
         .specimen-title {
             font-family: var(--font-mono);
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             margin-bottom: 8px;
-            line-height: 1.1;
+            line-height: 1.05;
         }
 
         .specimen-desc {
-            font-size: 13.5px;
+            font-size: 14px;
             color: var(--text-muted);
-            line-height: 1.45;
-            margin-bottom: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
             flex: 1;
         }
 
@@ -301,15 +301,15 @@
             font-size: 9px;
             color: var(--text-muted);
             letter-spacing: 0.5px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             display: flex;
-            gap: 12px;
+            gap: 14px;
         }
 
         .specimen-actions {
             display: flex;
             gap: 8px;
-            padding-top: 12px;
+            padding-top: 16px;
             border-top: 1px solid var(--border);
         }
 
@@ -321,19 +321,20 @@
             gap: 8px;
             font-family: var(--font-mono);
             font-size: 11px;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             background: var(--accent);
-            color: var(--bg);
+            color: white;
             border: none;
-            padding: 11px 16px;
+            padding: 12px 18px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.1s ease;
+            border-radius: 10px;
+            transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .engage-btn:hover {
-            background: color-mix(in srgb, var(--accent) 85%, white 15%);
+            filter: brightness(1.08);
             transform: translateY(-1px);
         }
 
@@ -343,23 +344,26 @@
             justify-content: center;
             font-family: var(--font-mono);
             font-size: 11px;
-            letter-spacing: 1px;
-            padding: 0 14px;
+            letter-spacing: 0.5px;
+            padding: 0 16px;
             border: 1px solid var(--border);
             text-decoration: none;
             color: var(--text);
-            transition: all 0.1s ease;
+            border-radius: 10px;
+            transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .source-btn:hover {
-            background: color-mix(in srgb, var(--paper) 85%, black 8%);
+            background: var(--surface);
             border-color: var(--accent);
+            color: var(--accent);
         }
 
         .field-notes {
             background: var(--paper);
             border: 1px solid var(--border);
             padding: 22px 24px;
+            border-radius: var(--radius-lg);
         }
 
         .note {
@@ -389,12 +393,13 @@
 
         .protocol {
             font-family: var(--font-mono);
-            background: var(--bg);
+            background: var(--surface);
             border: 1px solid var(--border);
-            padding: 18px 20px;
+            padding: 20px 22px;
             font-size: 12.5px;
-            line-height: 1.7;
+            line-height: 1.65;
             color: var(--text-muted);
+            border-radius: var(--radius-lg);
         }
 
         .protocol .prompt {
@@ -415,10 +420,11 @@
         }
 
         .mini-frame {
-            background: var(--paper);
+            background: var(--surface);
             border: 1px solid var(--border);
             padding: 6px;
-            box-shadow: inset 0 1px 0 rgba(0,0,0,0.03);
+            border-radius: 14px;
+            box-shadow: 0 2px 8px -2px rgba(0,0,0,0.15);
         }
 
         .mini-label {
@@ -432,24 +438,26 @@
 
         /* Mini calculator in new aesthetic */
         .mini-calc {
-            background: var(--bg);
+            background: var(--surface);
             border: 1px solid var(--border);
             padding: 8px;
+            border-radius: 12px;
         }
         .mini-calc-display {
             font-family: var(--font-mono);
-            background: var(--paper);
+            background: var(--bg);
             border: 1px solid var(--border);
-            padding: 8px 10px;
+            padding: 10px 12px;
             text-align: right;
-            font-size: 19px;
+            font-size: 20px;
             color: var(--accent);
-            min-height: 34px;
+            min-height: 38px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
             margin-bottom: 6px;
             letter-spacing: 0.5px;
+            border-radius: 8px;
         }
         .mini-calc-grid {
             display: grid;
@@ -459,21 +467,22 @@
         .mini-calc-btn {
             font-family: var(--font-mono);
             font-size: 10px;
-            padding: 7px 0;
-            background: var(--paper);
+            padding: 8px 0;
+            background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text);
             text-align: center;
             cursor: pointer;
-            transition: all 0.05s ease;
+            border-radius: 8px;
+            transition: all 0.08s ease;
             user-select: none;
         }
         .mini-calc-btn:hover {
-            background: color-mix(in srgb, var(--paper) 85%, var(--accent) 4%);
+            background: color-mix(in srgb, var(--surface) 80%, var(--accent) 6%);
             border-color: var(--accent);
         }
         .mini-calc-btn:active {
-            transform: translateY(1px);
+            transform: scale(0.96);
             background: var(--bg);
         }
         .mini-calc-btn.op {
@@ -489,26 +498,29 @@
 
         /* Mini ttt */
         .mini-ttt-frame {
-            background: var(--bg);
+            background: var(--surface);
             border: 1px solid var(--border);
             padding: 8px;
+            border-radius: 14px;
         }
         .mini-ttt {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
-            background: var(--paper);
+            gap: 4px;
+            background: var(--surface);
             padding: 4px;
+            border-radius: 10px;
         }
         .mini-ttt-cell {
             aspect-ratio: 1;
             background: var(--paper);
             border: 1px solid var(--border);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: var(--font-mono);
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 600;
             color: var(--text);
             cursor: pointer;
@@ -517,7 +529,7 @@
         .mini-ttt-cell.x { color: var(--accent); }
         .mini-ttt-cell.o { color: var(--accent-warm); }
         .mini-ttt-cell.win {
-            background: color-mix(in srgb, var(--paper) 80%, var(--success) 12%);
+            background: color-mix(in srgb, var(--paper) 75%, var(--success) 18%);
             border-color: var(--success);
             color: var(--success);
         }
@@ -526,29 +538,32 @@
         .mini-todo {
             font-family: var(--font-mono);
             font-size: 10px;
-            background: var(--bg);
+            background: var(--surface);
             border: 1px solid var(--border);
             padding: 6px;
+            border-radius: 10px;
         }
         .mini-todo-row {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 3px 4px;
+            padding: 4px 5px;
             margin-bottom: 1px;
+            border-radius: 6px;
         }
         .mini-todo-row:last-child {
             margin-bottom: 0;
         }
         .mini-todo-check {
-            width: 11px;
-            height: 11px;
+            width: 13px;
+            height: 13px;
             border: 1px solid var(--border);
+            border-radius: 4px;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 7px;
+            font-size: 8px;
             color: var(--success);
         }
         .mini-todo-check.checked {
@@ -571,8 +586,9 @@
             color: var(--text);
             font-family: var(--font-mono);
             font-size: 9px;
-            padding: 3px 5px;
+            padding: 4px 6px;
             margin-top: 4px;
+            border-radius: 6px;
         }
         .mini-todo-input:focus {
             outline: none;

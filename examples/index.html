@@ -84,13 +84,16 @@
             border: 1px solid var(--border);
             margin-bottom: 13px;
             padding: 18px 22px 16px;
-            transition: border-color 0.15s ease, background 0.15s ease;
+            transition: border-color 0.15s ease, background 0.15s ease, transform 0.2s ease;
             position: relative;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px -4px rgba(0,0,0,0.1);
         }
 
         .entry:hover {
-            border-color: #3f3f3f;
-            background: #121212;
+            border-color: var(--accent);
+            background: var(--surface);
+            transform: translateY(-2px);
         }
 
         .entry-header {
