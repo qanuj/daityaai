@@ -170,7 +170,7 @@
     <div class="max-w-5xl mx-auto px-6 pb-14">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="bg-slate-900 border border-slate-800 rounded-3xl px-5 py-4 text-center">
-                <div class="text-3xl font-semibold text-white tabular-nums">2</div>
+                <div class="text-3xl font-semibold text-white tabular-nums">3</div>
                 <div class="text-xs text-slate-400 mt-0.5 tracking-wide">INTERACTIVE DEMOS</div>
             </div>
             <div class="bg-slate-900 border border-slate-800 rounded-3xl px-5 py-4 text-center">
@@ -200,7 +200,7 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             <!-- Calculator Card -->
             <div class="grand-card group bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col">
@@ -351,6 +351,70 @@
                             Play against the AI →
                         </a>
                         <a href="https://github.com/qanuj/learning-grok/blob/main/examples/tic-tac-toe/index.html" target="_blank"
+                           class="px-4 py-3 border border-slate-700 hover:bg-slate-800 rounded-2xl text-sm flex items-center justify-center transition-colors" title="View source">
+                            <i class="fa-solid fa-code"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- To-Do List Card -->
+            <div class="grand-card group bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col">
+                <!-- Card Header -->
+                <div class="px-6 pt-6 pb-4 bg-gradient-to-r from-emerald-600/10 to-teal-600/5 border-b border-slate-800">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-x-3">
+                            <div class="w-11 h-11 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-inner">
+                                <i class="fa-solid fa-list-check text-white text-2xl"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-x-2">
+                                    <h3 class="text-2xl font-semibold tracking-tight">To-Do List</h3>
+                                    <span class="demo-badge px-2 py-px rounded-full bg-emerald-950 text-emerald-400 border border-emerald-900/60">LIVE</span>
+                                </div>
+                                <p class="text-xs text-slate-400 -mt-0.5">Drag • Edit • Persist</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teaser Visual -->
+                <div class="p-6 bg-slate-950">
+                    <div class="mx-auto max-w-[260px] border border-slate-700 bg-slate-900 rounded-2xl p-2 text-xs">
+                        <!-- Mini task rows -->
+                        <div class="flex items-center gap-2 px-2 py-1.5 bg-slate-800 rounded-xl mb-1">
+                            <div class="w-3.5 h-3.5 border border-emerald-500 bg-emerald-500 rounded flex items-center justify-center"><i class="fa-solid fa-check text-white" style="font-size:7px"></i></div>
+                            <div class="flex-1 text-slate-400 line-through text-[10px]">Explore the demos</div>
+                        </div>
+                        <div class="flex items-center gap-2 px-2 py-1.5 bg-slate-800 rounded-xl mb-1">
+                            <div class="w-3.5 h-3.5 border border-slate-600 rounded"></div>
+                            <div class="flex-1 text-white text-[10px]">Add a new task here</div>
+                        </div>
+                        <div class="flex items-center gap-2 px-2 py-1.5 bg-slate-800 rounded-xl">
+                            <div class="w-3.5 h-3.5 border border-slate-600 rounded"></div>
+                            <div class="flex-1 text-white text-[10px]">Drag to reorder</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 pb-6 flex-1 flex flex-col">
+                    <p class="text-slate-400 text-[15px] leading-relaxed">
+                        Clean, fast to-do app. LocalStorage persistence, drag &amp; drop reordering, double-click or pencil to edit, filters, and keyboard support (/, Enter, Esc).
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-1.5 mt-4">
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-emerald-950 text-emerald-400">Drag &amp; drop</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Inline edit</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Filters + clear</span>
+                        <span class="text-[10px] px-2.5 py-px rounded-full bg-slate-800 text-slate-300">Local persistence</span>
+                    </div>
+                    
+                    <div class="mt-auto pt-5 flex items-center gap-x-3">
+                        <a href="examples/todo-list/" 
+                           class="flex-1 text-center px-5 py-3 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-950 font-semibold rounded-2xl text-sm transition-all">
+                            Open To-Do List →
+                        </a>
+                        <a href="https://github.com/qanuj/learning-grok/blob/main/examples/todo-list/index.html" target="_blank"
                            class="px-4 py-3 border border-slate-700 hover:bg-slate-800 rounded-2xl text-sm flex items-center justify-center transition-colors" title="View source">
                             <i class="fa-solid fa-code"></i>
                         </a>
