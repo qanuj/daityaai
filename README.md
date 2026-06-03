@@ -25,6 +25,37 @@ Standalone demos that deploy instantly with **GitHub Pages**.
 - [Tax Precision (GST-11)](./gst-calculator/) — Forward/reverse GST (5/12/18/28 + custom) with split.
 - [Compound Accrual (SIP-12)](./sip-calculator/) — SIP FV, invested, gains, growth %.
 
+### Games
+- [Snake Engine (SNAKE-13)](./snake-game/)
+- [Memory Matrix (MEMORY-14)](./memory-game/)
+- [Sudoku Grid (SUDOKU-15)](./sudoku/)
+- [Tactical Chess (CHESS-16)](./chess-puzzle/)
+- [Lexical Oracle (WORDLE-17)](./wordle/)
+- [Syllable Executor (HANGMAN-18)](./hangman/)
+- [Gravity Avoidance (FLAPPY-19)](./flappy-bird/)
+- [Tile Fusion (2048-20)](./2048/)
+- [Gesture Engine (RPS-21)](./rock-paper-scissors/)
+
+### Educational
+- [Multiplication Drill (MULT-22)](./multiplication-practice/)
+- [Keystroke Velocimeter (TYPING-23)](./typing-test/)
+- [Spaced Recall (FLASH-24)](./flashcards/)
+- [Element Atlas (PERIODIC-25)](./periodic-table/)
+- [Problem Forge (MATHQUIZ-26)](./math-quiz/)
+- [Word Nexus (VOCAB-27)](./vocabulary-builder/)
+
+### Utility
+- [QR Forge (QRGEN-28)](./qr-generator/)
+- [Optical Decoder (QRSCAN-29)](./qr-scanner/)
+- [Entropy Engine (PASSGEN-30)](./password-generator/)
+- [Entropy Meter (PASSCHK-31)](./password-strength/)
+- [Chroma Lab (PALETTE-32)](./color-palette/)
+- [Structure Viewer (JSON-33)](./json-formatter/)
+- [Layer Transcode (BASE64-34)](./base64-tool/)
+- [Dimension Bridge (UNIT-35)](./unit-converter/)
+- [Prose Lens (MD-36)](./markdown-previewer/)
+- [Pattern Probe (REGEX-37)](./regex-tester/)
+
 ### Quick start
 
 ```bash

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEMORY-14 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:520px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb,var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .status { display:flex; align-items:center; gap:6px; color:var(--success); }
+        .status-dot { width:6px; height:6px; background:var(--success); border-radius:50%; box-shadow:0 0 0 2px rgba(48,209,88,.25); }
+        .board { padding:20px; background:var(--bg); display:grid; gap:10px; justify-content:center; }
+        .card { width:64px; height:64px; background:var(--surface); border:1px solid var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:28px; cursor:pointer; transition: transform .2s cubic-bezier(0.23,1,0.32,1), background .1s; user-select:none; }
+        .card.flipped { background:var(--panel); transform: rotateY(180deg); }
+        .card.matched { background:color-mix(in srgb, var(--success) 15%, var(--panel)); border-color:var(--success); pointer-events:none; }
+        .stats { padding:12px 20px; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; }
+        .controls { padding:12px 18px 16px; background:var(--bg); border-top:1px solid var(--border); display:flex; gap:8px; }
+        .btn { font-family:var(--font-mono); font-size:11px; letter-spacing:0.5px; padding:8px 16px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; }
+        .btn.primary { background:color-mix(in srgb,var(--surface)65%,var(--accent)20%); border-color:var(--accent); }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">MEMORY-14</span> / MEMORY MATRIX</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="status"><span class="status-dot"></span><span>OPERATIONAL</span></div>
+                <button id="theme-toggle" class="theme-toggle">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="board" id="board" style="grid-template-columns: repeat(4, 64px);"></div>
+
+        <div class="stats">
+            <div>MOVES <span id="moves" style="color:var(--accent);font-weight:600;">00</span></div>
+            <div>TIME <span id="time">00:00</span></div>
+            <div>PAIRS <span id="pairs" style="color:var(--success);">0/8</span></div>
+        </div>
+
+        <div class="controls">
+            <button id="start" class="btn primary">NEW GAME</button>
+            <select id="diff" style="font-family:var(--font-mono);font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:8px;">
+                <option value="8">EASY (8 pairs)</option>
+                <option value="12">MEDIUM (12 pairs)</option>
+                <option value="16">HARD (16 pairs)</option>
+            </select>
+        </div>
+    </div>
+    <div class="footer">DAITYA AI ACADEMY • SPECIMEN-14 • LEARN. BUILD. LAUNCH.</div>
+
+    <script>
+        let cards = [], flipped = [], matched = 0, moves = 0, timer = null, seconds = 0, locked = false;
+
+        const board = document.getElementById('board');
+        const movesEl = document.getElementById('moves');
+        const timeEl = document.getElementById('time');
+        const pairsEl = document.getElementById('pairs');
+
+        const SYMBOLS = ['🍎','🍌','🍇','🍓','🥝','🍍','🥑','🍒','🍋','🥭','🍉','🍈','🌶️','🥕','🥜','🌰'];
+
+        function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+        function startGame() {
+            clearInterval(timer);
+            const pairs = parseInt(document.getElementById('diff').value);
+            const needed = SYMBOLS.slice(0, pairs);
+            cards = shuffle([...needed, ...needed]);
+            flipped = [];
+            matched = 0;
+            moves = 0;
+            seconds = 0;
+            locked = false;
+
+            movesEl.textContent = '00';
+            timeEl.textContent = '00:00';
+            pairsEl.textContent = `0/${pairs}`;
+            board.style.gridTemplateColumns = `repeat(${Math.ceil(Math.sqrt(pairs*2))}, 64px)`;
+            board.innerHTML = '';
+
+            cards.forEach((sym, i) => {
+                const c = document.createElement('div');
+                c.className = 'card';
+                c.dataset.index = i;
+                c.dataset.sym = sym;
+                c.innerHTML = '<span style="opacity:0">?</span>';
+                c.onclick = () => flip(c);
+                board.appendChild(c);
+            });
+
+            timer = setInterval(() => {
+                seconds++;
+                const m = String(Math.floor(seconds/60)).padStart(2,'0');
+                const s = String(seconds%60).padStart(2,'0');
+                timeEl.textContent = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function flip(card) {
+            if (locked || flipped.includes(card) || card.classList.contains('matched')) return;
+
+            card.classList.add('flipped');
+            card.innerHTML = card.dataset.sym;
+            flipped.push(card);
+
+            if (flipped.length === 2) {
+                locked = true;
+                moves++;
+                movesEl.textContent = String(moves).padStart(2,'0');
+
+                const [a,b] = flipped;
+                if (a.dataset.sym === b.dataset.sym) {
+                    setTimeout(() => {
+                        a.classList.add('matched');
+                        b.classList.add('matched');
+                        matched++;
+                        const total = parseInt(document.getElementById('diff').value);
+                        pairsEl.textContent = `${matched}/${total}`;
+                        flipped = [];
+                        locked = false;
+                        if (matched === total) {
+                            clearInterval(timer);
+                            setTimeout(() => alert(`Perfect! ${moves} moves in ${timeEl.textContent}`), 180);
+                        }
+                    }, 420);
+                } else {
+                    setTimeout(() => {
+                        a.classList.remove('flipped');
+                        b.classList.remove('flipped');
+                        a.innerHTML = '<span style="opacity:0">?</span>';
+                        b.innerHTML = '<span style="opacity:0">?</span>';
+                        flipped = [];
+                        locked = false;
+                    }, 720);
+                }
+            }
+        }
+
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('daitya-theme') || (window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
+            const apply = t => {
+                document.documentElement.classList.toggle('light', t==='light');
+                if (btn) btn.textContent = t==='light' ? 'DARK' : 'LIGHT';
+                localStorage.setItem('daitya-theme', t);
+            };
+            apply(saved);
+            if (btn) btn.onclick = () => apply(document.documentElement.classList.contains('light') ? 'dark' : 'light');
+        }
+
+        function init() {
+            initTheme();
+            document.getElementById('start').onclick = startGame;
+            document.getElementById('diff').onchange = startGame;
+            startGame();
+            console.log('%c[MEMORY-14] Memory Matrix online.', 'color:#52525b');
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>

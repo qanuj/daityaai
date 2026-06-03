@@ -89,6 +89,22 @@
             gap: 12px;
         }
 
+        .lab-header-center {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 10px;
+        }
+
+        .cat-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.1s ease;
+        }
+        .cat-link:hover {
+            color: var(--accent);
+        }
+
         .lab-header-right {
             display: flex;
             align-items: center;
@@ -641,9 +657,14 @@
         <div class="page">
             <div class="lab-header-inner">
                 <div class="lab-header-left">
-                    <span><span style="color:#22d3ee">DAITYA</span> / FIELD LOG</span>
+                    <a href="index.html" style="text-decoration:none;color:inherit;"><span><span style="color:#22d3ee">DAITYA</span> / FIELD LOG</span></a>
                     <span style="color:#52525b">•</span>
                     <span id="entry-id">ENTRY 001</span>
+                </div>
+                <div class="lab-header-center">
+                    <a href="games/" class="cat-link">GAMES</a>
+                    <a href="educational/" class="cat-link">EDUCATIONAL</a>
+                    <a href="utility/" class="cat-link">UTILITY</a>
                 </div>
                 <div class="lab-header-right">
                     <span><span class="status-dot"></span>ARCHIVE ONLINE</span>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDUCATIONAL — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root {
+            --bg: #000000; --surface: #1c1c1e; --paper: #2c2c2e;
+            --text: #f5f5f7; --text-muted: #8e8e93; --accent: #0a84ff; --accent-warm: #ff9f0a;
+            --success: #30d158; --border: #38383a;
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            --font-body: 'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --radius: 16px; --radius-lg: 22px;
+        }
+        html.light {
+            --bg: #f2f2f7; --surface: #ffffff; --paper: #ffffff;
+            --text: #000000; --text-muted: #6e6e73; --accent: #007aff; --accent-warm: #ff9500;
+            --success: #34c759; --border: #c6c6c8;
+        }
+        * { box-sizing: border-box; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); line-height:1.55; }
+        .container { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+        .lab-header { position: sticky; top:0; z-index:50; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(20px); border-bottom:1px solid var(--border); padding:10px 0; }
+        .lab-header-inner { max-width:980px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:11px; letter-spacing:0.5px; text-transform:uppercase; }
+        .lab-header-left { display:flex; align-items:center; gap:10px; }
+        .lab-header-left a { color:inherit; text-decoration:none; }
+        .logo { height:26px; width:auto; vertical-align:middle; margin-right:6px; }
+        .registry-header { display:flex; align-items:flex-end; justify-content:space-between; margin:32px 0 20px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+        .registry-title { font-family:var(--font-mono); font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); }
+        .registry-count { font-family:var(--font-mono); font-size:11px; letter-spacing:1px; color:var(--accent); }
+        .entry { display:block; text-decoration:none; color:inherit; background:var(--paper); border:1px solid var(--border); margin-bottom:12px; padding:16px 20px; border-radius:var(--radius-lg); transition: all 0.15s cubic-bezier(0.23,1,0.32,1); }
+        .entry:hover { border-color:var(--accent); transform: translateY(-1px); }
+        .entry-header { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px; }
+        .entry-sn { color:var(--accent); font-weight:500; }
+        .entry-title { font-family:var(--font-mono); font-size:16px; font-weight:600; letter-spacing:0.3px; margin-bottom:5px; }
+        .entry-desc { font-size:13px; color:var(--text-muted); max-width:58ch; margin-bottom:10px; }
+        .entry-footer { display:flex; gap:8px; flex-wrap:wrap; }
+        .entry-tag { font-family:var(--font-mono); font-size:9px; letter-spacing:0.5px; padding:2px 8px; border:1px solid var(--border); border-radius:4px; color:var(--text-muted); }
+        .back-link { font-family:var(--font-mono); font-size:10px; letter-spacing:1px; color:var(--text-muted); text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin-bottom:12px; }
+        .back-link:hover { color:var(--text); }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 7px; cursor:pointer; text-transform:uppercase; }
+        .footer-note { margin-top:40px; font-family:var(--font-mono); font-size:9px; color:#52525b; letter-spacing:0.5px; text-align:center; }
+    </style>
+</head>
+<body>
+    <div class="lab-header">
+        <div class="lab-header-inner">
+            <div class="lab-header-left">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" class="logo"><span><span style="color:#22d3ee">DAITYA</span> / EDUCATIONAL</span></a>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="../index.html" class="back-link"><i class="fa-solid fa-arrow-left" style="font-size:9px"></i> RETURN TO FIELD LOG</a>
+
+        <div class="registry-header">
+            <div>
+                <div class="registry-title">EDUCATIONAL ARCHIVE</div>
+                <div style="font-family:var(--font-mono); font-size:22px; font-weight:600; letter-spacing:-0.4px; margin-top:2px;">SKILL FORGE</div>
+            </div>
+            <div class="registry-count">6 SPECIMENS • ALL OPERATIONAL</div>
+        </div>
+
+        <a href="../multiplication-practice/" class="entry">
+            <div class="entry-header"><div><span class="entry-sn">SPECIMEN-22</span> / ARITHMETIC</div><div>REV 01 • LIVE</div></div>
+            <div class="entry-title">MULTIPLICATION DRILL</div>
+            <div class="entry-desc">Fast multiplication tables practice with levels, timer, streak tracking, and instant correctness feedback.</div>
+            <div class="entry-footer"><div class="entry-tag">TIMED</div><div class="entry-tag">STREAKS</div><div class="entry-tag">LEVELS</div></div>
+        </a>
+
+        <a href="../typing-test/" class="entry">
+            <div class="entry-header"><div><span class="entry-sn">SPECIMEN-23</span> / DEXTERITY</div><div>REV 01 • LIVE</div></div>
+            <div class="entry-title">KEYSTROKE VELOCIMETER</div>
+            <div class="entry-desc">Typing speed test with WPM, accuracy, live feedback, multiple passages, and personal best persistence.</div>
+            <div class="entry-footer"><div class="entry-tag">WPM</div><div class="entry-tag">ACCURACY</div><div class="entry-tag">PERSISTENT</div></div>
+        </a>
+
+        <a href="../flashcards/" class="entry">
+            <div class="entry-header"><div><span class="entry-sn">SPECIMEN-24</span> / MEMORY</div><div>REV 01 • LIVE</div></div>
+            <div class="entry-title">SPACED RECALL</div>
+            <div class="entry-desc">Customizable flashcard decks with flip, good/hard rating, simple spaced repetition scheduling, and export.</div>
+            <div class="entry-footer"><div class="entry-tag">DECKS</div><div class="entry-tag">SRS</div><div class="entry-tag">CUSTOM</div></div>
+        </a>
+
+        <a href="../periodic-table/" class="entry">
+            <div class="entry-header"><div><span class="entry-sn">SPECIMEN-25</span> / SCIENCE</div><div>REV 01 • LIVE</div></div>
+            <div class="entry-title">ELEMENT ATLAS</div>
+            <div class="entry-desc">Interactive periodic table. Click elements for detailed info, filters by category, search, and beautiful layout.</div>
+            <div class="entry-footer"><div class="entry-tag">118 ELEMENTS</div><div class="entry-tag">SEARCH</div><div class="entry-tag">DETAILS</div></div>
+        </a>
+
+        <a href="../math-quiz/" class="entry">
+            <div class="entry-header"><div><span class="entry-sn">SPECIMEN-26</span> / ARITHMETIC</div><div>REV 01 • LIVE</div></div>
+            <div class="entry-title">PROBLEM FORGE</div>
+            <div class="entry-desc">Generate math quizzes across operations and difficulties. Timed rounds, score, explanation on miss.</div>
+            <div class="entry-footer"><div class="entry-tag">GENERATOR</div><div class="entry-tag">TIMED</div><div class="entry-tag">EXPLAIN</div></div>
+        </a>
+
+        <a href="../vocabulary-builder/" class="entry">
+            <div class="entry-header"><div><span class="entry-sn">SPECIMEN-27</span> / LANGUAGE</div><div>REV 01 • LIVE</div></div>
+            <div class="entry-title">WORD NEXUS</div>
+            <div class="entry-desc">Vocabulary builder with definitions, synonyms, example sentences, quizzes, and progress tracking.</div>
+            <div class="entry-footer"><div class="entry-tag">WORDS</div><div class="entry-tag">QUIZ</div><div class="entry-tag">PROGRESS</div></div>
+        </a>
+
+        <div class="footer-note">
+            DAITYA AI ACADEMY • EDUCATIONAL ARCHIVE • LEARN. BUILD. LAUNCH.
+        </div>
+    </div>
+
+    <script>
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') { html.classList.add('light'); if (btn) btn.textContent = 'DARK'; }
+            else { html.classList.remove('light'); if (btn) btn.textContent = 'LIGHT'; }
+            localStorage.setItem('daitya-theme', theme);
+        }
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('daitya-theme');
+            if (!saved) saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            applyTheme(saved);
+            if (btn) btn.addEventListener('click', () => {
+                const isLight = document.documentElement.classList.contains('light');
+                applyTheme(isLight ? 'dark' : 'light');
+            });
+        }
+        initTheme();
+    </script>
+</body>
+</html>
