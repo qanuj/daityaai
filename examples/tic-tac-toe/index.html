@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe • Unbeatable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+        }
+
+        .cell {
+            font-family: 'Space Grotesk', system_ui, sans-serif;
+            font-weight: 700;
+            transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                        background-color 120ms ease,
+                        border-color 120ms ease,
+                        box-shadow 120ms ease;
+            user-select: none;
+        }
+        
+        .cell:hover:not(.filled):not(.win) {
+            background-color: #334155;
+            transform: scale(1.02);
+        }
+        
+        .cell:active:not(.filled) {
+            transform: scale(0.96);
+        }
+        
+        .cell.filled-x {
+            color: #38bdf8;
+            text-shadow: 0 2px 4px rgba(56, 189, 248, 0.3);
+        }
+        
+        .cell.filled-o {
+            color: #fb923c;
+            text-shadow: 0 2px 4px rgba(251, 146, 60, 0.3);
+        }
+        
+        .cell.win {
+            background-color: rgba(52, 211, 153, 0.12);
+            border-color: #10b981;
+            box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3);
+        }
+
+        .board {
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4),
+                        0 10px 10px -5px rgb(0 0 0 / 0.2);
+        }
+
+        .status {
+            transition: all 0.2s ease;
+        }
+
+        .ttt-container {
+            max-width: 360px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 flex items-center justify-center min-h-screen p-4 text-slate-200">
+    <div class="w-full max-w-[380px]">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-5 px-1">
+            <div class="flex items-center gap-x-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-violet-600 to-fuchsia-600 rounded-2xl flex items-center justify-center shadow-inner">
+                    <i class="fa-solid fa-gamepad text-white text-2xl"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-x-2">
+                        <h1 class="text-3xl font-semibold tracking-tighter text-white">Tic Tac Toe</h1>
+                        <div onclick="showInfo()" 
+                             class="cursor-pointer px-2 py-0.5 text-[10px] font-semibold tracking-[0.5px] rounded-full bg-violet-950 text-violet-400 border border-violet-900 flex items-center gap-x-1 hover:bg-violet-900/70 transition-colors">
+                            <i class="fa-solid fa-robot fa-xs"></i>
+                            <span>UNBEATABLE</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-500 text-sm -mt-0.5">Perfect AI via Minimax</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score -->
+        <div class="flex items-center justify-center gap-x-2 mb-4">
+            <div class="flex items-center gap-x-1.5 bg-slate-900 border border-slate-800 rounded-2xl px-3 py-1 text-sm">
+                <div class="flex items-center gap-x-1">
+                    <span class="text-sky-400 font-medium">You</span>
+                    <span id="score-x" class="tabular-nums font-semibold text-sky-400">0</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-x-1.5 bg-slate-900 border border-slate-800 rounded-2xl px-3 py-1 text-sm">
+                <div class="flex items-center gap-x-1">
+                    <span class="text-slate-400 font-medium">Draws</span>
+                    <span id="score-draw" class="tabular-nums font-semibold text-slate-300">0</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-x-1.5 bg-slate-900 border border-slate-800 rounded-2xl px-3 py-1 text-sm">
+                <div class="flex items-center gap-x-1">
+                    <span class="text-orange-400 font-medium">AI</span>
+                    <span id="score-o" class="tabular-nums font-semibold text-orange-400">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Board -->
+        <div class="ttt-container">
+            <div id="board" 
+                 class="board grid grid-cols-3 gap-2 bg-slate-900 p-3 rounded-3xl border border-slate-800">
+                <!-- 9 cells populated by JS for cleanliness -->
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="mt-5 text-center">
+            <div id="status" 
+                 class="status inline-flex items-center justify-center gap-x-2 px-6 py-2.5 rounded-2xl bg-slate-900 border border-sky-900/50 text-sm font-medium text-sky-400 min-w-[190px]">
+                Your turn (X)
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex items-center justify-center gap-x-3 mt-6">
+            <button onclick="resetGame()" 
+                    class="flex items-center gap-x-2 px-6 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700 active:border-slate-600 rounded-2xl text-sm font-medium transition-colors">
+                <i class="fa-solid fa-redo fa-sm"></i>
+                <span>New Game</span>
+            </button>
+            <button onclick="resetScores()" 
+                    class="px-4 py-2.5 text-xs text-slate-400 hover:text-slate-300 active:text-slate-200 transition-colors border border-transparent hover:border-slate-800 rounded-2xl">
+                Reset scores
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <div class="text-[10px] text-slate-600">
+                The AI will <span class="text-emerald-500/80">never lose</span> with optimal play.
+                <span onclick="showInfo()" class="underline decoration-dotted cursor-pointer hover:text-slate-400">How?</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind runtime (no config needed beyond classes)
+        function initTailwind() {
+            // noop — using CDN defaults
+        }
+
+        // Game constants
+        const WIN_LINES = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // cols
+            [0, 4, 8], [2, 4, 6]             // diags
+        ];
+
+        // State
+        let boardState = Array(9).fill('');
+        let currentPlayer = 'X';
+        let gameOver = false;
+        let scores = { X: 0, O: 0, draw: 0 };
+        let cells = [];
+
+        // DOM refs
+        let boardEl, statusEl, scoreXEl, scoreOEl, scoreDrawEl;
+
+        function loadScores() {
+            try {
+                const saved = localStorage.getItem('ttt-scores-v1');
+                if (saved) scores = JSON.parse(saved);
+            } catch (e) {}
+        }
+
+        function saveScores() {
+            try {
+                localStorage.setItem('ttt-scores-v1', JSON.stringify(scores));
+            } catch (e) {}
+        }
+
+        function updateScores() {
+            if (scoreXEl) scoreXEl.textContent = scores.X;
+            if (scoreDrawEl) scoreDrawEl.textContent = scores.draw;
+            if (scoreOEl) scoreOEl.textContent = scores.O;
+            saveScores();
+        }
+
+        function createBoard() {
+            boardEl.innerHTML = '';
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell aspect-square bg-slate-800 border border-slate-700 rounded-2xl flex items-center justify-center text-6xl sm:text-7xl cursor-pointer';
+                cell.dataset.index = i;
+                cell.setAttribute('role', 'button');
+                cell.setAttribute('aria-label', `Cell ${i + 1}`);
+                boardEl.appendChild(cell);
+            }
+            cells = boardEl.querySelectorAll('.cell');
+            
+            cells.forEach(cell => {
+                cell.addEventListener('click', () => {
+                    const index = parseInt(cell.dataset.index, 10);
+                    handleMove(index);
+                });
+            });
+        }
+
+        function updateBoard() {
+            cells.forEach((cell, i) => {
+                const val = boardState[i];
+                cell.textContent = val;
+                cell.classList.remove('filled-x', 'filled-o', 'win');
+                
+                if (val === 'X') {
+                    cell.classList.add('filled-x');
+                } else if (val === 'O') {
+                    cell.classList.add('filled-o');
+                }
+                
+                // subtle scale pop when newly placed (handled in makeMove)
+            });
+        }
+
+        function clearHighlights() {
+            cells.forEach(c => c.classList.remove('win'));
+        }
+
+        function highlightWin(line) {
+            if (!line) return;
+            clearHighlights();
+            line.forEach(idx => {
+                if (cells[idx]) cells[idx].classList.add('win');
+            });
+        }
+
+        function checkGameState(board) {
+            for (const line of WIN_LINES) {
+                const [a, b, c] = line;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    return { winner: board[a], line };
+                }
+            }
+            return { winner: null, line: null };
+        }
+
+        function isBoardFull(board) {
+            return board.every(cell => cell !== '');
+        }
+
+        // Minimax — returns best score for the position
+        function minimax(board, isMaximizing) {
+            const { winner } = checkGameState(board);
+            
+            if (winner === 'O') return 10;
+            if (winner === 'X') return -10;
+            if (isBoardFull(board)) return 0;
+
+            if (isMaximizing) {
+                // AI (O) maximizing
+                let best = -Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'O';
+                        const score = minimax(board, false);
+                        board[i] = '';
+                        best = Math.max(best, score);
+                    }
+                }
+                return best;
+            } else {
+                // Human (X) minimizing
+                let best = Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'X';
+                        const score = minimax(board, true);
+                        board[i] = '';
+                        best = Math.min(best, score);
+                    }
+                }
+                return best;
+            }
+        }
+
+        // Returns a move index. Picks randomly among equally optimal moves for variety.
+        function getBestMove(board) {
+            let bestScore = -Infinity;
+            let bestMoves = [];
+            
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === '') {
+                    board[i] = 'O';
+                    const score = minimax(board, false);
+                    board[i] = '';
+                    
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMoves = [i];
+                    } else if (score === bestScore) {
+                        bestMoves.push(i);
+                    }
+                }
+            }
+            
+            if (bestMoves.length === 0) return -1;
+            // Random choice among optimal moves (all guarantee AI never loses)
+            return bestMoves[Math.floor(Math.random() * bestMoves.length)];
+        }
+
+        function updateStatus(resultMessage = null) {
+            if (!statusEl) return;
+            
+            const base = 'status inline-flex items-center justify-center gap-x-2 px-6 py-2.5 rounded-2xl bg-slate-900 border text-sm font-medium min-w-[190px] transition-all';
+            
+            if (resultMessage) {
+                statusEl.innerHTML = resultMessage;
+                
+                if (resultMessage.toLowerCase().includes('you won') || resultMessage.includes('X')) {
+                    statusEl.className = base + ' text-emerald-400 border-emerald-800/70 bg-emerald-950';
+                } else if (resultMessage.toLowerCase().includes('ai won') || resultMessage.includes('O')) {
+                    statusEl.className = base + ' text-orange-400 border-orange-800/70 bg-orange-950';
+                } else {
+                    statusEl.className = base + ' text-slate-300 border-slate-700';
+                }
+            } else if (!gameOver) {
+                if (currentPlayer === 'X') {
+                    statusEl.innerHTML = `Your turn <span class="text-slate-500 font-normal">(X)</span>`;
+                    statusEl.className = base + ' text-sky-400 border-sky-900/50';
+                } else {
+                    statusEl.innerHTML = `AI's turn <span class="text-slate-500 font-normal">(O)</span>`;
+                    statusEl.className = base + ' text-orange-400 border-orange-900/50';
+                }
+            }
+        }
+
+        function makeMove(index, player) {
+            if (gameOver || boardState[index] !== '') return false;
+
+            boardState[index] = player;
+
+            // Update cell with nice pop animation
+            const cell = cells[index];
+            cell.textContent = player;
+            cell.classList.remove('filled-x', 'filled-o');
+            cell.classList.add(player === 'X' ? 'filled-x' : 'filled-o');
+            
+            // Pop animation
+            cell.style.transform = 'scale(0.55)';
+            requestAnimationFrame(() => {
+                cell.style.transition = 'transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1)';
+                cell.style.transform = 'scale(1)';
+            });
+
+            const state = checkGameState(boardState);
+
+            if (state.winner) {
+                gameOver = true;
+                highlightWin(state.line);
+                
+                const winnerName = state.winner === 'X' ? 'You' : 'AI';
+                scores[state.winner]++;
+                updateScores();
+                updateStatus(`${winnerName} won!`);
+                
+                // subtle end state on board
+                boardEl.style.transition = 'opacity 200ms ease';
+                // leave board fully visible but highlighted cells show win
+            } else if (isBoardFull(boardState)) {
+                gameOver = true;
+                scores.draw++;
+                updateScores();
+                updateStatus("It's a draw!");
+            } else {
+                currentPlayer = (player === 'X' ? 'O' : 'X');
+                updateStatus();
+            }
+            
+            return true;
+        }
+
+        function handleMove(index) {
+            if (gameOver || currentPlayer !== 'X' || boardState[index] !== '') {
+                return;
+            }
+            
+            const moved = makeMove(index, 'X');
+            if (moved && !gameOver) {
+                // Give control to AI
+                currentPlayer = 'O';
+                updateStatus();
+                
+                // Small delay so it feels like the AI is "thinking"
+                setTimeout(() => {
+                    if (!gameOver) {
+                        computerMove();
+                    }
+                }, 420);
+            }
+        }
+
+        function computerMove() {
+            if (gameOver) return;
+            
+            const move = getBestMove(boardState);
+            if (move !== -1) {
+                makeMove(move, 'O');
+            }
+        }
+
+        function resetGame(keepScores = true) {
+            boardState = Array(9).fill('');
+            currentPlayer = 'X';
+            gameOver = false;
+            
+            clearHighlights();
+            boardEl.style.transition = '';
+            boardEl.style.opacity = '';
+            
+            updateBoard();
+            updateStatus();
+            
+            // If we wanted the AI to start sometimes we could call computerMove here,
+            // but human always starts as X for this "never lose" demo.
+        }
+
+        function resetScores() {
+            scores = { X: 0, O: 0, draw: 0 };
+            updateScores();
+            // Keep current game running
+        }
+
+        function showInfo() {
+            const html = `
+                <div class="fixed inset-0 bg-black/80 flex items-end sm:items-center justify-center z-50 p-4" onclick="this.remove()">
+                    <div onclick="event.stopImmediatePropagation()" 
+                         class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-md text-sm">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="font-semibold text-lg tracking-tight">Unbeatable AI</div>
+                                <div class="text-violet-400 text-xs tracking-widest font-medium">MINIMAX ALGORITHM</div>
+                            </div>
+                            <button onclick="this.closest('.fixed').remove()" 
+                                    class="text-slate-400 hover:text-white p-1 -mr-1">
+                                <i class="fa-solid fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-3 text-slate-300">
+                            <p>The AI uses the classic <strong>Minimax</strong> algorithm with perfect information.</p>
+                            <ul class="list-disc pl-5 space-y-1 text-sm">
+                                <li>It explores every possible future game tree</li>
+                                <li>Always chooses the move that maximizes its chance of winning (or forcing a draw)</li>
+                                <li>Assigns +10 for AI win, −10 for human win, 0 for draw</li>
+                                <li>Because Tic Tac Toe is solved, with perfect play the result is always a draw</li>
+                            </ul>
+                            <p class="text-xs text-slate-500 pt-1">If you make a mistake the AI will punish it and win. Play perfectly and you'll draw every time.</p>
+                        </div>
+                        
+                        <div class="mt-5 pt-4 border-t border-slate-800 text-[10px] text-center text-slate-500">
+                            Single-file • No server • Runs on GitHub Pages
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', html);
+        }
+
+        function setupKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === 'r') {
+                    e.preventDefault();
+                    resetGame();
+                }
+                if (e.key === 'Escape' && !gameOver) {
+                    // optional: do nothing or clear selection — here just reset for convenience
+                    // resetGame();
+                }
+                // Number keys 1-9 for cells (numpad friendly)
+                const num = parseInt(e.key, 10);
+                if (num >= 1 && num <= 9 && !gameOver && currentPlayer === 'X') {
+                    const idx = num - 1;
+                    handleMove(idx);
+                }
+            });
+            
+            // Bonus: space to restart when over
+            document.addEventListener('keypress', (e) => {
+                if (e.key === ' ' && gameOver) {
+                    e.preventDefault();
+                    resetGame();
+                }
+            });
+        }
+
+        function initGame() {
+            initTailwind();
+            
+            boardEl = document.getElementById('board');
+            statusEl = document.getElementById('status');
+            scoreXEl = document.getElementById('score-x');
+            scoreOEl = document.getElementById('score-o');
+            scoreDrawEl = document.getElementById('score-draw');
+            
+            loadScores();
+            updateScores();
+            
+            createBoard();
+            updateBoard();
+            updateStatus();
+            
+            setupKeyboard();
+            
+            // Make sure first game is ready for human (X)
+            // Uncomment next line if you ever want AI to demonstrate first move:
+            // setTimeout(() => { if (!gameOver && currentPlayer === 'O') computerMove(); }, 600);
+            
+            // Easter egg: click the UNBEATABLE badge also opens info (already wired)
+            console.log('%c[TicTacToe] Unbeatable Minimax Tic Tac Toe initialized. Press R to restart.', 'color:#475569');
+        }
+
+        // Boot
+        window.onload = initGame;
+
+        // Expose for console tinkering / demos
+        window.__ttt = {
+            reset: () => resetGame(),
+            forceAIMove: () => computerMove(),
+            getState: () => ({ board: [...boardState], currentPlayer, gameOver, scores })
+        };
+    </script>
+</body>
+</html>
