@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            /* Apple elegant */
+            /* Apple elegant dark */
             --bg: #000000;
             --panel: #1c1c1e;
+            --surface: #2c2c2e;
             --text: #f5f5f7;
             --text-muted: #8e8e93;
             --accent: #0a84ff;
@@ -25,8 +26,10 @@
         }
 
         html.light {
+            /* Apple elegant light */
             --bg: #f2f2f7;
             --panel: #ffffff;
+            --surface: #ffffff;
             --text: #000000;
             --text-muted: #6e6e73;
             --accent: #007aff;
@@ -38,10 +41,6 @@
         body {
             margin: 0;
             background: var(--bg);
-            background-image: 
-                linear-gradient(var(--grid) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-            background-size: 18px 18px;
             color: var(--text);
             font-family: var(--font-body);
             padding: 24px 16px;
@@ -65,10 +64,11 @@
             font-family: var(--font-mono);
             font-size: 10px;
             letter-spacing: 1.5px;
-            padding: 9px 14px 8px;
-            background: var(--bg);
+            padding: 12px 18px;
+            background: color-mix(in srgb, var(--panel) 95%, transparent);
             border-bottom: 1px solid var(--border);
             display: flex;
+            align-items: center;
             justify-content: space-between;
             text-transform: uppercase;
         }
@@ -80,7 +80,8 @@
             background: none;
             border: 1px solid var(--border);
             color: var(--text-muted);
-            padding: 1px 6px;
+            padding: 2px 8px;
+            border-radius: 6px;
             cursor: pointer;
             text-transform: uppercase;
         }
@@ -96,7 +97,7 @@
             width: 6px; height: 6px;
             background: var(--accent);
             border-radius: 50%;
-            box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
         }
 
         .matrix-wrapper {
@@ -125,7 +126,7 @@
 
         .cell {
             aspect-ratio: 1;
-            background: var(--paper);
+            background: var(--paper, var(--surface));
             border: 1px solid var(--border);
             font-family: var(--font-mono);
             font-size: 40px;
@@ -135,24 +136,23 @@
             justify-content: center;
             cursor: pointer;
             color: var(--text);
-            transition: all 0.1s ease;
+            transition: all 0.1s cubic-bezier(0.23, 1, 0.32, 1);
             user-select: none;
             border-radius: 12px;
         }
 
         .cell:hover:not(.filled) {
-            background: #1a1a1a;
-            border-color: #3f3f3f;
+            background: color-mix(in srgb, var(--surface) 85%, var(--accent) 5%);
+            border-color: var(--accent);
         }
 
         .cell.x { color: var(--accent); }
         .cell.o { color: var(--accent-warm); }
 
         .cell.win {
-            background: #052e16;
+            background: color-mix(in srgb, var(--surface) 70%, var(--success) 20%);
             border-color: var(--success);
             color: var(--success);
-            box-shadow: 0 0 0 1px rgba(74,222,128,0.3);
         }
 
         .status-bar {
@@ -195,12 +195,6 @@
             border-color: var(--accent);
         }
 
-        .btn.primary {
-            background: color-mix(in srgb, var(--surface) 70%, var(--success) 15%);
-            border-color: var(--success);
-            color: var(--success);
-        }
-
         .scores {
             display: flex;
             justify-content: space-between;
@@ -226,7 +220,7 @@
 <body>
     <div class="instrument">
         <div class="instrument-header">
-            <div><span style="color:#eab308">MATRIX-02</span> / STRATEGIC SIMULATION GRID</div>
+            <div><span style="color:var(--accent-warm)">MATRIX-02</span> / STRATEGIC SIMULATION GRID</div>
             <div style="display:flex; align-items:center; gap:8px;">
                 <div class="status">
                     <span class="status-dot"></span>
@@ -243,7 +237,7 @@
 
         <div class="status-bar">
             <div id="status">YOUR MOVE (X)</div>
-            <div style="font-size:9px; color:#52525b">HUMAN vs OPTIMAL</div>
+            <div style="font-size:9px; opacity:0.6;">HUMAN vs OPTIMAL</div>
         </div>
 
         <div class="scores">
@@ -267,12 +261,12 @@
         </div>
     </div>
 
-    <div style="text-align:center; margin-top:16px; font-family: var(--font-mono); font-size:8px; letter-spacing:1px; color:#52525b;">
+    <div style="text-align:center; margin-top:16px; font-family: var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted);">
         DAITYA AI ACADEMY • SPECIMEN-02 • LEARN. BUILD. LAUNCH.
     </div>
 
     <script>
-        // === Minimax Tic Tac Toe - preserved logic, new brutalist presentation ===
+        // === Clean, working Minimax Tic Tac Toe ===
         const WIN_LINES = [
             [0,1,2],[3,4,5],[6,7,8],
             [0,3,6],[1,4,7],[2,5,8],
@@ -389,6 +383,7 @@
                     bestMoves.push(i);
                 }
             }
+            if (bestMoves.length === 0) return -1;
             return bestMoves[Math.floor(Math.random() * bestMoves.length)];
         }
 
@@ -396,7 +391,9 @@
             const el = document.getElementById('status');
             if (msg) {
                 el.textContent = msg;
-                el.style.color = msg.includes('MATRIX') ? 'var(--accent-warm)' : (msg.includes('DRAW') ? '#737373' : 'var(--success)');
+                if (msg.includes('MATRIX')) el.style.color = 'var(--accent-warm)';
+                else if (msg.includes('DRAW')) el.style.color = 'var(--text-muted)';
+                else el.style.color = 'var(--success)';
             } else if (!gameOver) {
                 el.textContent = currentPlayer === 'X' ? 'YOUR MOVE (X)' : 'MATRIX THINKING...';
                 el.style.color = currentPlayer === 'X' ? 'var(--accent)' : 'var(--accent-warm)';
@@ -428,7 +425,7 @@
                 if (currentPlayer === 'O') {
                     setTimeout(() => {
                         if (!gameOver) computerMove();
-                    }, 380);
+                    }, 420);
                 }
             }
             return true;
@@ -441,7 +438,7 @@
                 updateStatus();
                 setTimeout(() => {
                     if (!gameOver) computerMove();
-                }, 380);
+                }, 420);
             }
         }
 
@@ -451,7 +448,7 @@
             if (move > -1) makeMove(move, 'O');
         }
 
-        function resetGame(keepScores = true) {
+        function resetGame() {
             boardState = Array(9).fill('');
             currentPlayer = 'X';
             gameOver = false;
@@ -482,7 +479,7 @@
             });
         }
 
-        // Theme toggle
+        // Theme
         function applyTheme(theme) {
             const html = document.documentElement;
             const btn = document.getElementById('theme-toggle');
@@ -493,11 +490,12 @@
                 html.classList.remove('light');
                 if (btn) btn.textContent = 'LIGHT';
             }
-            localStorage.setItem('grok-theme', theme);
+            localStorage.setItem('daitya-theme', theme);
         }
+
         function initTheme() {
             const btn = document.getElementById('theme-toggle');
-            let saved = localStorage.getItem('grok-theme');
+            let saved = localStorage.getItem('daitya-theme');
             if (!saved) {
                 saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
             }
@@ -519,7 +517,7 @@
             updateStatus();
             setupKeyboard();
 
-            console.log('%c[MATRIX-02] Strategic Simulation Grid initialized. Minimax locked.', 'color:#52525b');
+            console.log('%c[MATRIX-02] Strategic Simulation Grid initialized.', 'color:#52525b');
         }
 
         window.onload = initMatrix;
