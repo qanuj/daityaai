@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=examples/">
+    <title>learning-grok</title>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            background: #0f172a; 
+            color: #64748b; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0;
+        }
+        a { color: #3b82f6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div>
+        Redirecting to <a href="examples/">examples/</a>...
+    </div>
+    <script>
+        // Fallback if meta refresh is blocked
+        setTimeout(() => {
+            if (location.pathname === '/' || location.pathname === '/index.html') {
+                location.href = 'examples/';
+            }
+        }, 800);
+    </script>
+</body>
+</html>
