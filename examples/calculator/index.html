@@ -22,6 +22,17 @@
             --font-body: 'Instrument Sans', system-ui, sans-serif;
         }
 
+        html.light {
+            --bg: #f8f7f4;
+            --panel: #ffffff;
+            --text: #111111;
+            --text-muted: #52525b;
+            --accent: #0284c8;
+            --accent-warm: #854d0e;
+            --success: #15803d;
+            --border: #d1d5db;
+        }
+
         body {
             margin: 0;
             background: var(--bg);
@@ -51,11 +62,23 @@
             font-size: 10px;
             letter-spacing: 1.5px;
             padding: 9px 14px 8px;
-            background: #050505;
+            background: var(--bg);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 1px 6px;
+            cursor: pointer;
             text-transform: uppercase;
         }
 
@@ -75,7 +98,7 @@
 
         .display-wrapper {
             padding: 14px 16px 10px;
-            background: #050505;
+            background: var(--bg);
             border-bottom: 1px solid var(--border);
             position: relative;
         }
@@ -120,7 +143,7 @@
 
         .keypad {
             padding: 10px;
-            background: #050505;
+            background: var(--bg);
         }
 
         .keypad-grid {
@@ -133,9 +156,9 @@
             font-family: var(--font-mono);
             font-size: 15px;
             height: 48px;
-            background: #121212;
-            border: 1px solid #262626;
-            color: #d4d4d8;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--text);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -143,31 +166,31 @@
             user-select: none;
             transition: all 0.06s ease;
             font-weight: 500;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+            box-shadow: inset 0 1px 0 rgba(0,0,0,0.03);
         }
 
         .key:hover {
-            background: #1a1a1a;
-            border-color: #3f3f3f;
+            background: color-mix(in srgb, var(--paper) 88%, var(--accent) 3%);
+            border-color: var(--accent);
         }
 
         .key:active {
             transform: translateY(1px);
             box-shadow: none;
-            background: #0f0f0f;
+            background: var(--bg);
         }
 
         .key.operator {
-            background: #1c2526;
+            background: color-mix(in srgb, var(--paper) 75%, var(--accent-warm) 10%);
             color: var(--accent-warm);
-            border-color: #3f3f3f;
+            border-color: var(--border);
             font-size: 17px;
         }
 
         .key.equals {
-            background: #052e16;
+            background: color-mix(in srgb, var(--paper) 75%, var(--success) 12%);
             color: var(--success);
-            border-color: #166534;
+            border-color: var(--border);
             font-size: 18px;
             font-weight: 600;
         }
@@ -175,14 +198,14 @@
         .key.utility {
             font-size: 11px;
             letter-spacing: 0.5px;
-            background: #171717;
+            background: color-mix(in srgb, var(--paper) 92%, #000 4%);
         }
 
         .telemetry {
             font-family: var(--font-mono);
             font-size: 9px;
             padding: 8px 14px 10px;
-            background: #050505;
+            background: var(--bg);
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
@@ -213,9 +236,12 @@
             <div>
                 <span style="color:#22d3ee">CALC-01</span> / PRECISION ARITHMETIC ENGINE
             </div>
-            <div class="status">
-                <span class="status-dot"></span>
-                <span>OPERATIONAL</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div class="status">
+                    <span class="status-dot"></span>
+                    <span>OPERATIONAL</span>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
             </div>
         </div>
 
@@ -435,7 +461,36 @@
             });
         }
 
+        // Theme toggle
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') {
+                html.classList.add('light');
+                if (btn) btn.textContent = 'DARK';
+            } else {
+                html.classList.remove('light');
+                if (btn) btn.textContent = 'LIGHT';
+            }
+            localStorage.setItem('grok-theme', theme);
+        }
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('grok-theme');
+            if (!saved) {
+                saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            applyTheme(saved);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('light');
+                    applyTheme(isLight ? 'dark' : 'light');
+                });
+            }
+        }
+
         function init() {
+            initTheme();
             updateDisplay();
             updateTelemetry();
             setupKeyboard();

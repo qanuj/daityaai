@@ -22,6 +22,17 @@
             --font-body: 'Instrument Sans', system-ui, sans-serif;
         }
 
+        html.light {
+            --bg: #f8f7f4;
+            --panel: #ffffff;
+            --text: #111111;
+            --text-muted: #52525b;
+            --accent: #0284c8;
+            --accent-warm: #854d0e;
+            --success: #15803d;
+            --border: #d1d5db;
+        }
+
         body {
             margin: 0;
             background: var(--bg);
@@ -50,10 +61,22 @@
             font-size: 10px;
             letter-spacing: 1.5px;
             padding: 9px 14px 8px;
-            background: #050505;
+            background: var(--bg);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 1px 6px;
+            cursor: pointer;
             text-transform: uppercase;
         }
 
@@ -73,7 +96,7 @@
 
         .matrix-wrapper {
             padding: 22px 20px 14px;
-            background: #050505;
+            background: var(--bg);
         }
 
         .matrix-label {
@@ -130,7 +153,7 @@
             font-family: var(--font-mono);
             font-size: 10px;
             padding: 11px 14px;
-            background: #050505;
+            background: var(--bg);
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
@@ -140,7 +163,7 @@
 
         .controls {
             padding: 12px 14px;
-            background: #050505;
+            background: var(--bg);
             border-top: 1px solid var(--border);
             display: flex;
             gap: 8px;
@@ -177,7 +200,7 @@
             font-family: var(--font-mono);
             font-size: 9px;
             padding: 8px 14px 10px;
-            background: #050505;
+            background: var(--bg);
             border-top: 1px solid var(--border);
             color: var(--text-muted);
         }
@@ -197,9 +220,12 @@
     <div class="instrument">
         <div class="instrument-header">
             <div><span style="color:#eab308">MATRIX-02</span> / STRATEGIC SIMULATION GRID</div>
-            <div class="status">
-                <span class="status-dot"></span>
-                <span>MINIMAX ACTIVE</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div class="status">
+                    <span class="status-dot"></span>
+                    <span>MINIMAX ACTIVE</span>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
             </div>
         </div>
 
@@ -449,7 +475,36 @@
             });
         }
 
+        // Theme toggle
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') {
+                html.classList.add('light');
+                if (btn) btn.textContent = 'DARK';
+            } else {
+                html.classList.remove('light');
+                if (btn) btn.textContent = 'LIGHT';
+            }
+            localStorage.setItem('grok-theme', theme);
+        }
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('grok-theme');
+            if (!saved) {
+                saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            applyTheme(saved);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('light');
+                    applyTheme(isLight ? 'dark' : 'light');
+                });
+            }
+        }
+
         function initMatrix() {
+            initTheme();
             loadScores();
             updateScores();
             createBoard();

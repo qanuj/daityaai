@@ -22,6 +22,17 @@
             --font-body: 'Instrument Sans', system-ui, -apple-system, sans-serif;
         }
 
+        html.light {
+            --bg: #f8f7f4;
+            --paper: #ffffff;
+            --text: #111111;
+            --text-muted: #52525b;
+            --accent: #0284c8;
+            --accent-warm: #854d0e;
+            --border: #d1d5db;
+            --grid: rgba(0, 0, 0, 0.055);
+        }
+
         body {
             margin: 0;
             background-color: var(--bg);
@@ -155,6 +166,24 @@
             color: var(--text-muted);
             margin-bottom: 4px;
         }
+
+        .theme-toggle {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 2px 7px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-transform: uppercase;
+            margin-left: 12px;
+        }
+        .theme-toggle:hover {
+            color: var(--text);
+            border-color: var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -169,7 +198,10 @@
                 <div class="page-label">GROK FIELD LOG</div>
                 <div style="font-family: var(--font-mono); font-size: 22px; font-weight: 600; letter-spacing: -0.3px;">SPECIMEN INDEX</div>
             </div>
-            <div class="registry-count">3 SPECIMENS • ALL OPERATIONAL</div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="registry-count">3 SPECIMENS • ALL OPERATIONAL</div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
         </div>
 
         <!-- Specimen 01 -->
@@ -221,5 +253,36 @@
             ALL SPECIMENS ARE PURE SINGLE-FILE HTML • NO EXTERNAL RUNTIME DEPENDENCIES
         </div>
     </div>
+
+    <script>
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') {
+                html.classList.add('light');
+                if (btn) btn.textContent = 'DARK';
+            } else {
+                html.classList.remove('light');
+                if (btn) btn.textContent = 'LIGHT';
+            }
+            localStorage.setItem('grok-theme', theme);
+        }
+
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('grok-theme');
+            if (!saved) {
+                saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            applyTheme(saved);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('light');
+                    applyTheme(isLight ? 'dark' : 'light');
+                });
+            }
+        }
+        initTheme();
+    </script>
 </body>
 </html>

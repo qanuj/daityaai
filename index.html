@@ -17,12 +17,23 @@
             --accent: #22d3ee;
             --accent-warm: #eab308;
             --success: #4ade80;
-            --danger: #f87171;
             --border: #262626;
             --grid: rgba(255, 255, 255, 0.035);
             
             --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
             --font-body: 'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html.light {
+            --bg: #f8f7f4;
+            --paper: #ffffff;
+            --text: #111111;
+            --text-muted: #52525b;
+            --accent: #0284c8;
+            --accent-warm: #854d0e;
+            --success: #15803d;
+            --border: #d1d5db;
+            --grid: rgba(0, 0, 0, 0.055);
         }
 
         * {
@@ -52,7 +63,7 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(5,5,5,0.92);
+            background: color-mix(in srgb, var(--bg) 92%, transparent);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 10px 0;
@@ -77,8 +88,25 @@
         .lab-header-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             color: var(--text-muted);
+        }
+
+        .theme-toggle {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-transform: uppercase;
+        }
+        .theme-toggle:hover {
+            color: var(--text);
+            border-color: var(--accent);
         }
 
         .status-dot {
@@ -379,10 +407,10 @@
         }
 
         .mini-frame {
-            background: #0a0a0a;
-            border: 1px solid #262626;
+            background: var(--paper);
+            border: 1px solid var(--border);
             padding: 6px;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+            box-shadow: inset 0 1px 0 rgba(0,0,0,0.03);
         }
 
         .mini-label {
@@ -396,14 +424,14 @@
 
         /* Mini calculator in new aesthetic */
         .mini-calc {
-            background: #050505;
-            border: 1px solid #1f1f1f;
+            background: var(--bg);
+            border: 1px solid var(--border);
             padding: 8px;
         }
         .mini-calc-display {
             font-family: var(--font-mono);
-            background: #0a0a0a;
-            border: 1px solid #262626;
+            background: var(--paper);
+            border: 1px solid var(--border);
             padding: 8px 10px;
             text-align: right;
             font-size: 19px;
@@ -424,64 +452,64 @@
             font-family: var(--font-mono);
             font-size: 10px;
             padding: 7px 0;
-            background: #121212;
-            border: 1px solid #262626;
-            color: #d4d4d8;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            color: var(--text);
             text-align: center;
             cursor: pointer;
             transition: all 0.05s ease;
             user-select: none;
         }
         .mini-calc-btn:hover {
-            background: #1a1a1a;
-            border-color: #3f3f3f;
+            background: color-mix(in srgb, var(--paper) 85%, var(--accent) 4%);
+            border-color: var(--accent);
         }
         .mini-calc-btn:active {
             transform: translateY(1px);
-            background: #0a0a0a;
+            background: var(--bg);
         }
         .mini-calc-btn.op {
-            background: #1f2937;
-            color: var(--accent);
-            border-color: #334155;
+            background: color-mix(in srgb, var(--paper) 70%, var(--accent-warm) 12%);
+            color: var(--accent-warm);
+            border-color: var(--border);
         }
         .mini-calc-btn.eq {
-            background: #052e16;
+            background: color-mix(in srgb, var(--paper) 70%, var(--success) 15%);
             color: var(--success);
-            border-color: #166534;
+            border-color: var(--border);
         }
 
         /* Mini ttt */
         .mini-ttt-frame {
-            background: #050505;
-            border: 1px solid #262626;
+            background: var(--bg);
+            border: 1px solid var(--border);
             padding: 8px;
         }
         .mini-ttt {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 3px;
-            background: #0a0a0a;
+            background: var(--paper);
             padding: 4px;
         }
         .mini-ttt-cell {
             aspect-ratio: 1;
-            background: #121212;
-            border: 1px solid #262626;
+            background: var(--paper);
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: var(--font-mono);
             font-size: 15px;
             font-weight: 600;
-            color: #e5e5e5;
+            color: var(--text);
             cursor: pointer;
             transition: all 0.1s ease;
         }
         .mini-ttt-cell.x { color: var(--accent); }
         .mini-ttt-cell.o { color: var(--accent-warm); }
         .mini-ttt-cell.win {
-            background: #052e16;
+            background: color-mix(in srgb, var(--paper) 80%, var(--success) 12%);
             border-color: var(--success);
             color: var(--success);
         }
@@ -490,8 +518,8 @@
         .mini-todo {
             font-family: var(--font-mono);
             font-size: 10px;
-            background: #050505;
-            border: 1px solid #262626;
+            background: var(--bg);
+            border: 1px solid var(--border);
             padding: 6px;
         }
         .mini-todo-row {
@@ -517,20 +545,20 @@
         }
         .mini-todo-check.checked {
             background: var(--success);
-            color: #050505;
+            color: var(--bg);
             border-color: var(--success);
         }
         .mini-todo-text {
             flex: 1;
-            color: #a3a3a3;
+            color: var(--text-muted);
         }
         .mini-todo-text.done {
             text-decoration: line-through;
-            color: #52525b;
+            color: var(--text-muted);
         }
         .mini-todo-input {
             width: 100%;
-            background: #0a0a0a;
+            background: var(--paper);
             border: 1px solid var(--border);
             color: var(--text);
             font-family: var(--font-mono);
@@ -595,6 +623,7 @@
                 <div class="lab-header-right">
                     <span><span class="status-dot"></span>ARCHIVE ONLINE</span>
                     <span id="lab-clock" style="font-variant-numeric:tabular-nums">00:00:00 UTC</span>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
                 </div>
             </div>
         </div>
@@ -1000,8 +1029,44 @@
             });
         }
 
+        // --- Theme System (Dark default, user can switch) ---
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            
+            if (theme === 'light') {
+                html.classList.add('light');
+                if (btn) btn.textContent = 'DARK';
+            } else {
+                html.classList.remove('light');
+                if (btn) btn.textContent = 'LIGHT';
+            }
+            localStorage.setItem('grok-theme', theme);
+        }
+
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('grok-theme');
+            
+            if (!saved) {
+                // Respect system preference but default to the signature dark lab aesthetic
+                saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            
+            applyTheme(saved);
+            
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('light');
+                    applyTheme(isLight ? 'dark' : 'light');
+                });
+            }
+        }
+
         // --- Boot ---
         function initArchive() {
+            initTheme();
+
             // Initial display values
             const disp = document.getElementById('mini-calc-display');
             if (disp) disp.textContent = miniCalcValue;
