@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://qanuj.github.io/daityaai/sitemap.xml
