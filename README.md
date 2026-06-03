@@ -1,5 +1,7 @@
 # DaityaAI Academy
 
+![DaityaAI Logo](diatya-ai-icon.svg)
+
 **DaityaAI** — Learn. Build. Launch.
 
 A collection of pure, self-contained web instruments and demos for the Daitya AI Academy.
