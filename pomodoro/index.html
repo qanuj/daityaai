@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POMODORO-04 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root {
+            /* Apple elegant dark */
+            --bg: #000000;
+            --panel: #1c1c1e;
+            --surface: #2c2c2e;
+            --paper: #2c2c2e;
+            --text: #f5f5f7;
+            --text-muted: #8e8e93;
+            --accent: #0a84ff;
+            --accent-warm: #ff9f0a;
+            --success: #30d158;
+            --border: #38383a;
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            --font-body: 'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --radius: 18px;
+        }
+
+        html.light {
+            /* Apple elegant light */
+            --bg: #f2f2f7;
+            --panel: #ffffff;
+            --surface: #ffffff;
+            --paper: #ffffff;
+            --text: #000000;
+            --text-muted: #6e6e73;
+            --accent: #007aff;
+            --accent-warm: #ff9500;
+            --success: #34c759;
+            --border: #c6c6c8;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            padding: 24px 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .instrument {
+            width: 100%;
+            max-width: 460px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px -12px rgba(0,0,0,0.35);
+        }
+
+        .instrument-header {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            padding: 12px 18px;
+            background: color-mix(in srgb, var(--panel) 95%, transparent);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .instrument-header .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--success);
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px rgba(48, 209, 88, 0.25);
+        }
+
+        .timer-section {
+            padding: 32px 28px 24px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 3px;
+        }
+
+        .mode-tab {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.12s cubic-bezier(0.23,1,0.32,1);
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+        }
+
+        .mode-tab.active {
+            background: var(--panel);
+            color: var(--text);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .timer-display {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-ring {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent) calc(var(--progress, 0) * 1%), var(--surface) 0);
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+
+        .timer-ring::after {
+            content: '';
+            position: absolute;
+            inset: 14px;
+            background: var(--bg);
+            border-radius: 50%;
+            border: 1px solid var(--border);
+        }
+
+        .time {
+            position: relative;
+            z-index: 2;
+            font-family: var(--font-mono);
+            font-size: 62px;
+            font-weight: 600;
+            letter-spacing: -2.5px;
+            color: var(--accent);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .time-label {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            letter-spacing: 0.6px;
+            padding: 12px 28px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.1s cubic-bezier(0.23,1,0.32,1);
+            user-select: none;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            background: color-mix(in srgb, var(--surface) 92%, var(--accent) 8%);
+        }
+
+        .btn:active {
+            transform: scale(0.985);
+        }
+
+        .btn.primary {
+            background: color-mix(in srgb, var(--surface) 70%, var(--accent) 22%);
+            border-color: var(--accent);
+            color: var(--text);
+            font-weight: 600;
+            min-width: 132px;
+        }
+
+        .btn.primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn.danger {
+            color: #ff453a;
+            border-color: color-mix(in srgb, var(--border) 70%, #ff453a 12%);
+        }
+
+        .stats {
+            display: flex;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 22px;
+            gap: 10px;
+        }
+
+        .stat {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-top: 3px;
+            text-transform: uppercase;
+        }
+
+        .settings {
+            padding: 16px 20px;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .setting-row label {
+            text-transform: uppercase;
+        }
+
+        .toggle {
+            width: 42px;
+            height: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 16px; height: 16px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: transform 0.2s cubic-bezier(0.23,1,0.32,1);
+        }
+
+        .toggle.active {
+            background: color-mix(in srgb, var(--accent) 25%, var(--surface));
+            border-color: var(--accent);
+        }
+
+        .toggle.active::after {
+            transform: translateX(20px);
+            background: var(--accent);
+        }
+
+        .footer {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-align: center;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <!-- Header -->
+        <div class="instrument-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height: 28px; width: auto; vertical-align: middle;"></a>
+                <span><span style="color:var(--accent)">POMODORO-04</span> / TEMPORAL FOCUS ENGINE</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div class="status">
+                    <span class="status-dot"></span>
+                    <span>OPERATIONAL</span>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-section">
+            <div class="mode-tabs" id="mode-tabs">
+                <button class="mode-tab active" data-mode="work">WORK 25</button>
+                <button class="mode-tab" data-mode="short">SHORT 5</button>
+                <button class="mode-tab" data-mode="long">LONG 15</button>
+            </div>
+
+            <div class="timer-display">
+                <div class="timer-ring" id="progress-ring" style="--progress: 0;"></div>
+                <div>
+                    <div id="time" class="time">25:00</div>
+                    <div class="time-label" id="mode-label">FOCUS BLOCK</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="start-pause" class="btn primary">START</button>
+                <button id="reset" class="btn">RESET</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="sessions">0</div>
+                    <div class="stat-label">POMOS TODAY</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="total-min">0</div>
+                    <div class="stat-label">FOCUS MIN</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="settings">
+            <div class="setting-row">
+                <label>AUTO START BREAKS</label>
+                <div id="auto-toggle" class="toggle"></div>
+            </div>
+            <div class="setting-row">
+                <label>END CHIME</label>
+                <div id="sound-toggle" class="toggle active"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-04 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        // === Pomodoro-04 Temporal Focus Engine ===
+        let timeLeft = 25 * 60;
+        let totalTime = 25 * 60;
+        let timerInterval = null;
+        let isRunning = false;
+        let currentMode = 'work';
+        let sessionsToday = 0;
+        let totalFocusMin = 0;
+        let autoStartBreaks = true;
+        let soundEnabled = true;
+        let lastDate = null;
+
+        const timeEl = document.getElementById('time');
+        const modeLabel = document.getElementById('mode-label');
+        const progressRing = document.getElementById('progress-ring');
+        const startPauseBtn = document.getElementById('start-pause');
+        const resetBtn = document.getElementById('reset');
+        const sessionsEl = document.getElementById('sessions');
+        const totalMinEl = document.getElementById('total-min');
+        const modeTabs = document.getElementById('mode-tabs');
+
+        const MODE_DURATIONS = { work: 25, short: 5, long: 15 };
+        const MODE_LABELS = { work: 'FOCUS BLOCK', short: 'SHORT BREAK', long: 'LONG BREAK' };
+
+        function loadState() {
+            const saved = localStorage.getItem('daitya-pomodoro');
+            if (saved) {
+                const s = JSON.parse(saved);
+                sessionsToday = s.sessionsToday || 0;
+                totalFocusMin = s.totalFocusMin || 0;
+                autoStartBreaks = s.autoStartBreaks !== false;
+                soundEnabled = s.soundEnabled !== false;
+                lastDate = s.lastDate || null;
+
+                const today = new Date().toISOString().slice(0,10);
+                if (lastDate !== today) {
+                    // new day, reset daily count but keep total
+                    sessionsToday = 0;
+                }
+            }
+            updateStats();
+            document.getElementById('auto-toggle').classList.toggle('active', autoStartBreaks);
+            document.getElementById('sound-toggle').classList.toggle('active', soundEnabled);
+        }
+
+        function saveState() {
+            const today = new Date().toISOString().slice(0,10);
+            localStorage.setItem('daitya-pomodoro', JSON.stringify({
+                sessionsToday, totalFocusMin, autoStartBreaks, soundEnabled, lastDate: today
+            }));
+        }
+
+        function updateStats() {
+            sessionsEl.textContent = sessionsToday;
+            totalMinEl.textContent = totalFocusMin;
+        }
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+
+        function updateDisplay() {
+            timeEl.textContent = formatTime(timeLeft);
+            const progress = Math.max(0, Math.min(1, (totalTime - timeLeft) / totalTime));
+            progressRing.style.setProperty('--progress', progress * 100);
+        }
+
+        function setMode(mode) {
+            if (isRunning) pauseTimer();
+            currentMode = mode;
+            totalTime = MODE_DURATIONS[mode] * 60;
+            timeLeft = totalTime;
+
+            // UI tabs
+            modeTabs.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.mode === mode);
+            });
+
+            modeLabel.textContent = MODE_LABELS[mode];
+            if (mode === 'work') {
+                modeLabel.style.color = 'var(--accent)';
+            } else {
+                modeLabel.style.color = 'var(--success)';
+            }
+            updateDisplay();
+        }
+
+        function tick() {
+            if (!isRunning) return;
+            timeLeft--;
+            updateDisplay();
+
+            if (timeLeft <= 0) {
+                completeSession();
+            }
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            startPauseBtn.textContent = 'PAUSE';
+            startPauseBtn.style.background = 'color-mix(in srgb, var(--surface) 65%, var(--accent-warm) 18%)';
+            startPauseBtn.style.borderColor = 'var(--accent-warm)';
+            timerInterval = setInterval(tick, 1000);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            startPauseBtn.textContent = 'RESUME';
+            startPauseBtn.style.background = '';
+            startPauseBtn.style.borderColor = '';
+            clearInterval(timerInterval);
+            saveState();
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timeLeft = totalTime;
+            updateDisplay();
+            startPauseBtn.textContent = 'START';
+            startPauseBtn.style.background = '';
+            startPauseBtn.style.borderColor = '';
+        }
+
+        function playChime() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const filter = ctx.createBiquadFilter();
+
+                osc.type = 'sine';
+                osc.frequency.value = 880;
+                filter.type = 'lowpass';
+                filter.frequency.value = 2400;
+
+                const osc2 = ctx.createOscillator();
+                osc2.type = 'sine';
+                osc2.frequency.value = 1320;
+
+                gain.gain.value = 0.18;
+
+                const master = ctx.createGain();
+                master.gain.value = 0.7;
+
+                const t = ctx.currentTime;
+
+                osc.connect(filter);
+                osc2.connect(filter);
+                filter.connect(gain);
+                gain.connect(master);
+                master.connect(ctx.destination);
+
+                osc.start(t);
+                osc2.start(t);
+                gain.gain.setValueAtTime(0.18, t);
+                gain.gain.linearRampToValueAtTime(0.0001, t + 1.6);
+
+                osc.stop(t + 1.8);
+                osc2.stop(t + 1.8);
+            } catch (e) { /* silent */ }
+        }
+
+        function completeSession() {
+            pauseTimer();
+            playChime();
+
+            if (currentMode === 'work') {
+                sessionsToday++;
+                totalFocusMin += 25;
+                updateStats();
+                saveState();
+
+                // flash accent
+                timeEl.style.color = 'var(--success)';
+                setTimeout(() => { timeEl.style.color = 'var(--accent)'; }, 900);
+
+                if (autoStartBreaks) {
+                    const next = (sessionsToday % 4 === 0) ? 'long' : 'short';
+                    setTimeout(() => {
+                        setMode(next);
+                        startTimer();
+                    }, 820);
+                } else {
+                    // suggest break
+                    modeLabel.textContent = 'BREAK READY — SELECT MODE';
+                    modeLabel.style.color = 'var(--accent-warm)';
+                }
+            } else {
+                // break finished
+                modeLabel.textContent = 'BREAK COMPLETE';
+                setTimeout(() => {
+                    setMode('work');
+                    modeLabel.style.color = 'var(--accent)';
+                }, 1400);
+            }
+        }
+
+        function setupModes() {
+            modeTabs.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    setMode(tab.dataset.mode);
+                });
+            });
+        }
+
+        function setupControls() {
+            startPauseBtn.addEventListener('click', () => {
+                if (!isRunning) {
+                    startTimer();
+                } else {
+                    pauseTimer();
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                resetTimer();
+            });
+
+            // toggles
+            const autoT = document.getElementById('auto-toggle');
+            autoT.addEventListener('click', () => {
+                autoStartBreaks = !autoStartBreaks;
+                autoT.classList.toggle('active', autoStartBreaks);
+                saveState();
+            });
+
+            const soundT = document.getElementById('sound-toggle');
+            soundT.addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                soundT.classList.toggle('active', soundEnabled);
+                saveState();
+            });
+        }
+
+        function setupKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    if (isRunning) pauseTimer(); else startTimer();
+                }
+                if (e.key.toLowerCase() === 'r') {
+                    e.preventDefault();
+                    resetTimer();
+                }
+                if (e.key === '1') setMode('work');
+                if (e.key === '2') setMode('short');
+                if (e.key === '3') setMode('long');
+            });
+        }
+
+        // Theme (identical pattern)
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') {
+                html.classList.add('light');
+                if (btn) btn.textContent = 'DARK';
+            } else {
+                html.classList.remove('light');
+                if (btn) btn.textContent = 'LIGHT';
+            }
+            localStorage.setItem('daitya-theme', theme);
+        }
+
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('daitya-theme');
+            if (!saved) {
+                saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            applyTheme(saved);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('light');
+                    applyTheme(isLight ? 'dark' : 'light');
+                });
+            }
+        }
+
+        function init() {
+            initTheme();
+            loadState();
+
+            // default to work
+            setMode('work');
+            updateDisplay();
+
+            setupModes();
+            setupControls();
+            setupKeyboard();
+
+            // seed a gentle hint if zero
+            if (sessionsToday === 0) {
+                setTimeout(() => {
+                    if (!isRunning && timeLeft === totalTime) {
+                        // ready state
+                    }
+                }, 650);
+            }
+
+            // ensure saved on unload
+            window.addEventListener('beforeunload', saveState);
+
+            console.log('%c[POMODORO-04] Temporal Focus Engine online.', 'color:#52525b');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

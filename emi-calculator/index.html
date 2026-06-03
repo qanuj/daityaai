@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI-10 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:400px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb,var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .status { display:flex; align-items:center; gap:6px; color:var(--success); }
+        .status-dot { width:6px; height:6px; background:var(--success); border-radius:50%; box-shadow:0 0 0 2px rgba(48,209,88,.25); }
+        .inps { padding:16px 18px 8px; background:var(--bg); display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .field label { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px; }
+        .field input { font-family:var(--font-mono); font-size:15px; width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:9px 11px; border-radius:10px; }
+        .out { padding:16px 18px; background:var(--bg); border-bottom:1px solid var(--border); }
+        .row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; }
+        .row .l { color:var(--text-muted); }
+        .row .v { font-family:var(--font-mono); font-weight:600; }
+        .big { font-size:22px; color:var(--accent); }
+        .schedule { padding:12px 16px 14px; background:var(--surface); border-top:1px solid var(--border); }
+        .sch-h { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; }
+        .sch-row { display:grid; grid-template-columns:1fr 1fr 1fr; font-family:var(--font-mono); font-size:10px; padding:3px 0; border-bottom:1px solid var(--border); }
+        .sch-row.head { color:var(--text-muted); border-bottom:1px solid var(--border); }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">EMI-10</span> / AMORTIZATION ENGINE</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="status"><span class="status-dot"></span><span>OPERATIONAL</span></div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="inps">
+            <div class="field"><label>LOAN AMOUNT (₹)</label><input id="p" type="number" value="2500000" step="1000"></div>
+            <div class="field"><label>ANNUAL RATE (%)</label><input id="r" type="number" value="8.5" step="0.1"></div>
+            <div class="field"><label>TENURE (MONTHS)</label><input id="n" type="number" value="240" step="1"></div>
+            <div class="field"><label></label><button id="calc" style="margin-top:18px;width:100%;font-family:var(--font-mono);font-size:11px;padding:9px 0;border-radius:10px;border:1px solid var(--accent);background:color-mix(in srgb,var(--surface)70%,var(--accent)18%);color:var(--text);">RECALCULATE</button></div>
+        </div>
+
+        <div class="out">
+            <div class="row"><div class="l">MONTHLY EMI</div><div id="emi" class="v big">—</div></div>
+            <div class="row"><div class="l">TOTAL PAYMENT</div><div id="total" class="v">—</div></div>
+            <div class="row"><div class="l">TOTAL INTEREST</div><div id="interest" class="v">—</div></div>
+        </div>
+
+        <div class="schedule">
+            <div class="sch-h">FIRST 6 PAYMENTS (PRIN / INT / BAL)</div>
+            <div id="schedule"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-10 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        function calcEMI() {
+            const P = parseFloat(document.getElementById('p').value) || 0;
+            const annual = parseFloat(document.getElementById('r').value) || 0;
+            const N = parseInt(document.getElementById('n').value) || 0;
+            const r = annual / 12 / 100;
+
+            if (P<=0 || N<=0) { clearOut(); return; }
+
+            let emi;
+            if (r === 0) emi = P / N;
+            else emi = P * r * Math.pow(1+r, N) / (Math.pow(1+r, N) - 1);
+
+            const total = emi * N;
+            const interest = total - P;
+
+            document.getElementById('emi').textContent = '₹' + emi.toFixed(0);
+            document.getElementById('total').textContent = '₹' + total.toFixed(0);
+            document.getElementById('interest').textContent = '₹' + interest.toFixed(0);
+
+            // schedule first 6
+            const sch = document.getElementById('schedule');
+            sch.innerHTML = '';
+            let bal = P;
+            const head = document.createElement('div'); head.className='sch-row head'; head.innerHTML='<div>#</div><div>PRINCIPAL</div><div>INTEREST</div><div>BALANCE</div>'; sch.appendChild(head);
+
+            for (let i=1; i<=Math.min(6,N); i++) {
+                const intPart = bal * r;
+                const prinPart = emi - intPart;
+                bal = Math.max(0, bal - prinPart);
+                const row = document.createElement('div'); row.className='sch-row';
+                row.innerHTML = `<div>${i}</div><div>₹${prinPart.toFixed(0)}</div><div>₹${intPart.toFixed(0)}</div><div>₹${bal.toFixed(0)}</div>`;
+                sch.appendChild(row);
+            }
+            if (N > 6) {
+                const more = document.createElement('div'); more.style.cssText='font-family:var(--font-mono);font-size:9px;color:var(--text-muted);padding-top:4px;'; more.textContent = `... + ${N-6} more payments`;
+                sch.appendChild(more);
+            }
+        }
+
+        function clearOut(){ ['emi','total','interest'].forEach(id=>document.getElementById(id).textContent='—'); document.getElementById('schedule').innerHTML=''; }
+
+        function setup() {
+            ['p','r','n'].forEach(id => document.getElementById(id).addEventListener('input', calcEMI));
+            document.getElementById('calc').addEventListener('click', calcEMI);
+            calcEMI();
+        }
+
+        function applyTheme(th){const h=document.documentElement,b=document.getElementById('theme-toggle');if(th==='light'){h.classList.add('light');if(b)b.textContent='DARK';}else{h.classList.remove('light');if(b)b.textContent='LIGHT';}localStorage.setItem('daitya-theme',th);}
+        function initTheme(){const b=document.getElementById('theme-toggle');let s=localStorage.getItem('daitya-theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');applyTheme(s);if(b)b.addEventListener('click',()=>{const l=document.documentElement.classList.contains('light');applyTheme(l?'dark':'light');});}
+
+        function init(){initTheme();setup(); console.log('%c[EMI-10] Amortization Engine online.', 'color:#52525b');}
+        window.onload=init;
+    </script>
+</body>
+</html>

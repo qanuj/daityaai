@@ -12,10 +12,18 @@ These are production-grade, single-file HTML experiments designed to teach real 
 
 Standalone demos that deploy instantly with **GitHub Pages**.
 
-- [Precision Calculator](./calculator/) — Full arithmetic engine with keyboard, chaining, and telemetry. A classic lab instrument reimagined.
-- [Strategic Matrix](./tic-tac-toe/) — 3×3 game with unbeatable Minimax AI. The machine never loses.
-- [Task Vector Ledger](./todo-list/) — High-precision persistent todo with drag-reorder, inline editing, and filters.
-- More instruments coming soon...
+- [Precision Calculator (CALC-01)](./calculator/) — Full arithmetic engine with keyboard, chaining, and telemetry.
+- [Strategic Matrix (MATRIX-02)](./tic-tac-toe/) — 3×3 game with unbeatable Minimax AI. The machine never loses.
+- [Task Vector (VECTOR-03)](./todo-list/) — High-precision persistent todo with drag-reorder, inline editing, and filters.
+- [Temporal Focus Engine (POMODORO-04)](./pomodoro/) — Pomodoro timer with ring, modes, auto-breaks, chimes, persistence.
+- [Recursion Rituals (HABIT-05)](./habit-tracker/) — Habit tracker with streaks, 14-day dots, inline edit, daily checks.
+- [Diurnal Orchestra (PLANNER-06)](./daily-planner/) — Time-blocked daily planner. Sorted entries, complete, persist.
+- [Cashflow Ledger (EXPENSE-07)](./expense-tracker/) — Expense log + category viz + filters + totals.
+- [Somatic Index (BMI-08)](./bmi-calculator/) — Live BMI with dual units, category, ideal range, advice.
+- [Temporal Age (CHRONO-09)](./age-calculator/) — Exact Y/M/D age + days to birthday + zodiac.
+- [Amortization Engine (EMI-10)](./emi-calculator/) — EMI + interest + first-6 schedule preview.
+- [Tax Precision (GST-11)](./gst-calculator/) — Forward/reverse GST (5/12/18/28 + custom) with split.
+- [Compound Accrual (SIP-12)](./sip-calculator/) — SIP FV, invested, gains, growth %.
 
 ### Quick start
 

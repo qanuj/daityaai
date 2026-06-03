@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXPENSE-07 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root {
+            --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e;
+            --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a;
+            --success:#30d158; --border:#38383a;
+            --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+            --radius:18px;
+        }
+        html.light {
+            --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff;
+            --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500;
+            --success:#34c759; --border:#c6c6c8;
+        }
+        body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);padding:24px 16px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+        .instrument{width:100%;max-width:500px;background:var(--panel);border:1px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:0 20px 50px-12px rgba(0,0,0,0.35);}
+        .instrument-header{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;padding:12px 18px;background:color-mix(in srgb,var(--panel)95%,transparent);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;}
+        .theme-toggle{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;background:none;border:1px solid var(--border);color:var(--text-muted);padding:2px 8px;border-radius:6px;cursor:pointer;text-transform:uppercase;}
+        .status{display:flex;align-items:center;gap:6px;color:var(--success);}
+        .status-dot{width:6px;height:6px;background:var(--success);border-radius:50%;box-shadow:0 0 0 2px rgba(48,209,88,.25);}
+        .add-bar{padding:14px 16px 12px;background:var(--bg);border-bottom:1px solid var(--border);display:grid;grid-template-columns:86px 1fr 92px 42px;gap:6px;align-items:center;}
+        .amt-input{font-family:var(--font-mono);font-size:14px;background:var(--surface);border:1px solid var(--border);color:var(--accent);padding:8px 10px;border-radius:10px;text-align:right;}
+        .cat-select{font-family:var(--font-mono);font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 6px;border-radius:10px;}
+        .note-input{font-family:var(--font-body);font-size:13px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;}
+        .add-go{font-family:var(--font-mono);font-size:13px;padding:9px 0;border-radius:10px;border:1px solid var(--accent);background:color-mix(in srgb,var(--surface)68%,var(--accent)20%);color:var(--text);cursor:pointer;font-weight:600;}
+        .filters{padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;}
+        .fbtn{font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);cursor:pointer;}
+        .fbtn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+        .list{max-height:260px;overflow:auto;background:var(--bg);}
+        .txn{display:flex;align-items:center;gap:12px;padding:9px 16px;border-bottom:1px solid var(--border);font-size:13px;}
+        .txn:last-child{border-bottom:none;}
+        .txn .amt{font-family:var(--font-mono);color:#ff453a;min-width:72px;text-align:right;font-weight:500;}
+        .txn .meta{flex:1;min-width:0;}
+        .txn .cat{font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;color:var(--text-muted);text-transform:uppercase;}
+        .txn .note{font-size:12.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .txn .date{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-left:auto;padding-left:8px;}
+        .del-btn{color:var(--text-muted);cursor:pointer;font-size:11px;padding:4px;}
+        .del-btn:hover{color:#ff453a;}
+        .viz{padding:14px 18px 16px;background:var(--surface);border-top:1px solid var(--border);}
+        .viz-title{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;}
+        .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:11px;}
+        .bar-row:last-child{margin-bottom:0;}
+        .bar-label{font-family:var(--font-mono);width:62px;color:var(--text-muted);font-size:9px;}
+        .bar-track{flex:1;height:7px;background:var(--border);border-radius:999px;overflow:hidden;}
+        .bar-fill{height:100%;background:var(--accent-warm);transition:width .3s ease;}
+        .total-bar{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;}
+        .total-bar .num{color:#ff453a;font-weight:600;}
+        .footer{font-family:var(--font-mono);font-size:8px;letter-spacing:1px;color:var(--text-muted);text-align:center;padding-top:20px;}
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">EXPENSE-07</span> / CASHFLOW LEDGER</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="status"><span class="status-dot"></span><span>OPERATIONAL</span></div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="add-bar">
+            <input id="amt" class="amt-input" type="number" step="0.01" placeholder="₹0.00" value="">
+            <select id="cat" class="cat-select">
+                <option>Food</option><option>Travel</option><option>Bills</option>
+                <option>Shopping</option><option>Health</option><option>Misc</option>
+            </select>
+            <input id="note" class="note-input" placeholder="Note (optional)" maxlength="48">
+            <button id="add" class="add-go"><i class="fa-solid fa-plus"></i></button>
+        </div>
+
+        <div class="filters" id="filters">
+            <!-- populated by js -->
+        </div>
+
+        <div id="list" class="list"></div>
+
+        <div class="viz">
+            <div class="viz-title">SPEND BY CATEGORY</div>
+            <div id="bars"></div>
+            <div class="total-bar">
+                <div>TOTAL</div>
+                <div id="grand-total" class="num">₹0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-07 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        let txns = []; // {id, date, amt, cat, note}
+        let filterCat = 'ALL';
+
+        const listEl = document.getElementById('list');
+        const barsEl = document.getElementById('bars');
+        const grandEl = document.getElementById('grand-total');
+        const amtIn = document.getElementById('amt');
+        const catSel = document.getElementById('cat');
+        const noteIn = document.getElementById('note');
+        const addBtn = document.getElementById('add');
+        const filtEl = document.getElementById('filters');
+
+        const CATS = ['Food','Travel','Bills','Shopping','Health','Misc'];
+
+        function load(){ const r=localStorage.getItem('daitya-expense'); if(r) txns=JSON.parse(r); renderFilters(); render(); }
+        function save(){ localStorage.setItem('daitya-expense',JSON.stringify(txns)); }
+
+        function renderFilters(){
+            filtEl.innerHTML = '';
+            const all = makeFbtn('ALL', true);
+            filtEl.appendChild(all);
+            CATS.forEach(c => filtEl.appendChild(makeFbtn(c, false)));
+        }
+        function makeFbtn(label, isAll){
+            const b = document.createElement('button');
+            b.className = 'fbtn' + ( (isAll && filterCat==='ALL') || label===filterCat ? ' active' : '');
+            b.textContent = label;
+            b.onclick = () => { filterCat = label; renderFilters(); render(); };
+            return b;
+        }
+
+        function render(){
+            listEl.innerHTML = '';
+            let visible = txns;
+            if (filterCat !== 'ALL') visible = txns.filter(t => t.cat === filterCat);
+
+            if (!visible.length) {
+                const e = document.createElement('div'); e.style.cssText='padding:22px 16px;color:var(--text-muted);font-family:var(--font-mono);font-size:10px;text-align:center;letter-spacing:1px;';
+                e.textContent = 'NO TRANSACTIONS' + (filterCat!=='ALL' ? ' IN THIS CATEGORY' : '');
+                listEl.appendChild(e);
+            } else {
+                // newest first
+                [...visible].sort((a,b)=> b.date.localeCompare(a.date) || b.id-a.id).forEach(t => {
+                    const row = document.createElement('div'); row.className='txn';
+                    const a = document.createElement('div'); a.className='amt'; a.textContent = '−₹' + t.amt.toFixed(2);
+                    const m = document.createElement('div'); m.className='meta';
+                    const c = document.createElement('div'); c.className='cat'; c.textContent = t.cat;
+                    const n = document.createElement('div'); n.className='note'; n.textContent = t.note || '—';
+                    m.append(c,n);
+                    const d = document.createElement('div'); d.className='date'; d.textContent = t.date.slice(5);
+                    const del = document.createElement('div'); del.className='del-btn'; del.innerHTML='<i class="fa-solid fa-times"></i>';
+                    del.onclick = () => { txns = txns.filter(x=>x.id!==t.id); save(); render(); };
+                    row.append(a,m,d,del);
+                    listEl.appendChild(row);
+                });
+            }
+            renderViz();
+        }
+
+        function renderViz(){
+            barsEl.innerHTML = '';
+            const sums = {};
+            CATS.forEach(c=>sums[c]=0);
+            txns.forEach(t => { sums[t.cat] = (sums[t.cat]||0) + t.amt; });
+            const max = Math.max(1, ...Object.values(sums));
+            let grand = 0;
+            CATS.forEach(c => {
+                const v = sums[c]; grand += v;
+                if (v <= 0.001 && filterCat !== 'ALL' && filterCat !== c) return;
+                const row = document.createElement('div'); row.className='bar-row';
+                const lab = document.createElement('div'); lab.className='bar-label'; lab.textContent = c;
+                const trk = document.createElement('div'); trk.className='bar-track';
+                const fl = document.createElement('div'); fl.className='bar-fill'; fl.style.width = (v/max*100)+'%';
+                trk.appendChild(fl);
+                const val = document.createElement('div'); val.style.cssText='font-family:var(--font-mono);font-size:10px;color:var(--text-muted);min-width:48px;text-align:right;'; val.textContent = '₹'+v.toFixed(0);
+                row.append(lab, trk, val);
+                barsEl.appendChild(row);
+            });
+            grandEl.textContent = '₹' + grand.toFixed(2);
+        }
+
+        function addTxn(){
+            const amt = parseFloat(amtIn.value);
+            if (!amt || amt <= 0) return;
+            const cat = catSel.value;
+            const note = (noteIn.value||'').trim();
+            const date = new Date().toISOString().slice(0,10);
+            txns.unshift({id:Date.now(), date, amt, cat, note});
+            amtIn.value=''; noteIn.value='';
+            save(); render();
+        }
+
+        function setup(){
+            addBtn.onclick = addTxn;
+            amtIn.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addTxn(); }};
+            noteIn.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); addTxn(); }};
+            document.addEventListener('keydown', e => { if(e.key==='/' && document.activeElement.tagName==='BODY'){e.preventDefault(); amtIn.focus();}});
+        }
+
+        function applyTheme(th){
+            const h=document.documentElement, b=document.getElementById('theme-toggle');
+            if(th==='light'){h.classList.add('light');if(b)b.textContent='DARK';}else{h.classList.remove('light');if(b)b.textContent='LIGHT';}
+            localStorage.setItem('daitya-theme',th);
+        }
+        function initTheme(){
+            const b=document.getElementById('theme-toggle');
+            let s=localStorage.getItem('daitya-theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
+            applyTheme(s);
+            if(b)b.addEventListener('click',()=>{const l=document.documentElement.classList.contains('light');applyTheme(l?'dark':'light');});
+        }
+
+        function init(){ initTheme(); load(); setup();
+            if(!txns.length && !localStorage.getItem('daitya-expense-seed')){
+                const d=new Date().toISOString().slice(0,10);
+                txns=[{id:1,date:d,amt:185,cat:'Food',note:'Lunch'},{id:2,date:d,amt:42,cat:'Travel',note:'Auto'},{id:3,date:d,amt:320,cat:'Bills',note:''}];
+                localStorage.setItem('daitya-expense-seed','1'); save(); render();
+            }
+            console.log('%c[EXPENSE-07] Cashflow Ledger online.', 'color:#52525b');
+        }
+        window.onload=init;
+    </script>
+</body>
+</html>

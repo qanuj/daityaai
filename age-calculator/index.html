@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONO-09 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root { --bg:#000000; --panel:#1c1c1e; --surface:#2c2c2e; --paper:#2c2c2e; --text:#f5f5f7; --text-muted:#8e8e93; --accent:#0a84ff; --accent-warm:#ff9f0a; --success:#30d158; --border:#38383a; --font-mono:'IBM Plex Mono',ui-monospace,monospace; --font-body:'Instrument Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif; --radius:18px; }
+        html.light { --bg:#f2f2f7; --panel:#ffffff; --surface:#ffffff; --paper:#ffffff; --text:#000000; --text-muted:#6e6e73; --accent:#007aff; --accent-warm:#ff9500; --success:#34c759; --border:#c6c6c8; }
+        body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:24px 16px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .instrument { width:100%; max-width:380px; background:var(--panel); border:1px solid var(--border); border-radius:24px; overflow:hidden; box-shadow:0 20px 50px-12px rgba(0,0,0,0.35); }
+        .instrument-header { font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; padding:12px 18px; background:color-mix(in srgb,var(--panel)95%,transparent); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; text-transform:uppercase; }
+        .theme-toggle { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; background:none; border:1px solid var(--border); color:var(--text-muted); padding:2px 8px; border-radius:6px; cursor:pointer; text-transform:uppercase; }
+        .status { display:flex; align-items:center; gap:6px; color:var(--success); }
+        .status-dot { width:6px; height:6px; background:var(--success); border-radius:50%; box-shadow:0 0 0 2px rgba(48,209,88,.25); }
+        .dob-wrap { padding:20px 18px 12px; background:var(--bg); border-bottom:1px solid var(--border); }
+        .dob-wrap label { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; color:var(--text-muted); display:block; margin-bottom:6px; }
+        .dob-wrap input { font-family:var(--font-mono); font-size:16px; width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:12px; }
+        .results { padding:18px 18px 8px; background:var(--bg); }
+        .result-row { display:flex; justify-content:space-between; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--border); }
+        .result-row:last-child { border-bottom:none; }
+        .result-label { font-family:var(--font-mono); font-size:10px; letter-spacing:1px; color:var(--text-muted); text-transform:uppercase; }
+        .result-val { font-family:var(--font-mono); font-size:22px; font-weight:600; color:var(--accent); letter-spacing:-0.4px; }
+        .next { margin-top:12px; padding:10px 14px; background:var(--surface); border-radius:12px; font-family:var(--font-mono); font-size:11px; }
+        .zodiac { padding:12px 18px; background:var(--surface); border-top:1px solid var(--border); font-size:12px; color:var(--text-muted); }
+        .footer { font-family:var(--font-mono); font-size:8px; letter-spacing:1px; color:var(--text-muted); text-align:center; padding-top:20px; }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height:28px;width:auto;vertical-align:middle;"></a>
+                <span><span style="color:var(--accent)">CHRONO-09</span> / TEMPORAL AGE</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="status"><span class="status-dot"></span><span>OPERATIONAL</span></div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="dob-wrap">
+            <label>DATE OF BIRTH</label>
+            <input id="dob" type="date" value="1990-05-15">
+        </div>
+
+        <div class="results">
+            <div class="result-row"><div class="result-label">YEARS</div><div id="years" class="result-val">34</div></div>
+            <div class="result-row"><div class="result-label">MONTHS</div><div id="months" class="result-val">11</div></div>
+            <div class="result-row"><div class="result-label">DAYS</div><div id="days" class="result-val">19</div></div>
+        </div>
+
+        <div class="next">
+            <span style="color:var(--text-muted);font-size:9px;letter-spacing:1px;">DAYS TO NEXT BIRTHDAY</span><br>
+            <span id="next-bday" style="font-family:var(--font-mono);font-size:20px;font-weight:600;color:var(--accent-warm);">187</span>
+        </div>
+
+        <div class="zodiac" id="zodiac">Taurus • Earth • Stubbornly reliable</div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-09 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        const ZODIACS = [
+            {s:'Capricorn', e:'Jan 19', sign:'♑', txt:'Earth • Disciplined'},
+            {s:'Aquarius', e:'Feb 18', sign:'♒', txt:'Air • Visionary'},
+            {s:'Pisces', e:'Mar 20', sign:'♓', txt:'Water • Intuitive'},
+            {s:'Aries', e:'Apr 19', sign:'♈', txt:'Fire • Bold'},
+            {s:'Taurus', e:'May 20', sign:'♉', txt:'Earth • Grounded'},
+            {s:'Gemini', e:'Jun 20', sign:'♊', txt:'Air • Curious'},
+            {s:'Cancer', e:'Jul 22', sign:'♋', txt:'Water • Protective'},
+            {s:'Leo', e:'Aug 22', sign:'♌', txt:'Fire • Radiant'},
+            {s:'Virgo', e:'Sep 22', sign:'♍', txt:'Earth • Precise'},
+            {s:'Libra', e:'Oct 23', sign:'♎', txt:'Air • Harmonious'},
+            {s:'Scorpio', e:'Nov 21', sign:'♏', txt:'Water • Intense'},
+            {s:'Sagittarius', e:'Dec 21', sign:'♐', txt:'Fire • Adventurous'},
+        ];
+
+        function getZodiac(date) {
+            const m = date.getMonth()+1, d = date.getDate();
+            const day = m*100 + d;
+            if (day <= 119) return ZODIACS[0];
+            if (day <= 218) return ZODIACS[1];
+            if (day <= 320) return ZODIACS[2];
+            if (day <= 419) return ZODIACS[3];
+            if (day <= 520) return ZODIACS[4];
+            if (day <= 620) return ZODIACS[5];
+            if (day <= 722) return ZODIACS[6];
+            if (day <= 822) return ZODIACS[7];
+            if (day <= 922) return ZODIACS[8];
+            if (day <= 1023) return ZODIACS[9];
+            if (day <= 1121) return ZODIACS[10];
+            return ZODIACS[11];
+        }
+
+        function calc() {
+            const val = document.getElementById('dob').value;
+            if (!val) return;
+            const dob = new Date(val);
+            const now = new Date();
+
+            let y = now.getFullYear() - dob.getFullYear();
+            let m = now.getMonth() - dob.getMonth();
+            let d = now.getDate() - dob.getDate();
+            if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+            if (m < 0) { y--; m += 12; }
+
+            document.getElementById('years').textContent = y;
+            document.getElementById('months').textContent = m;
+            document.getElementById('days').textContent = d;
+
+            // next birthday
+            let next = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+            if (next < now) next.setFullYear(next.getFullYear()+1);
+            const diff = Math.ceil((next - now) / 86400000);
+            document.getElementById('next-bday').textContent = diff;
+
+            const z = getZodiac(dob);
+            document.getElementById('zodiac').innerHTML = `${z.sign} ${z.s} • ${z.txt}`;
+        }
+
+        function applyTheme(th){const h=document.documentElement,b=document.getElementById('theme-toggle');if(th==='light'){h.classList.add('light');if(b)b.textContent='DARK';}else{h.classList.remove('light');if(b)b.textContent='LIGHT';}localStorage.setItem('daitya-theme',th);}
+        function initTheme(){const b=document.getElementById('theme-toggle');let s=localStorage.getItem('daitya-theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');applyTheme(s);if(b)b.addEventListener('click',()=>{const l=document.documentElement.classList.contains('light');applyTheme(l?'dark':'light');});}
+
+        function init(){ initTheme();
+            const inp = document.getElementById('dob');
+            inp.addEventListener('input', calc);
+            inp.addEventListener('change', calc);
+            // default today-30y
+            if (!inp.value) {
+                const d = new Date(); d.setFullYear(d.getFullYear()-30);
+                inp.value = d.toISOString().slice(0,10);
+            }
+            calc();
+            console.log('%c[CHRONO-09] Temporal Age online.', 'color:#52525b');
+        }
+        window.onload=init;
+    </script>
+</body>
+</html>

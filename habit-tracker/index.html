@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HABIT-05 — DAITYA AI ACADEMY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="../diatya-ai-icon.svg">
+    <style>
+        :root {
+            /* Apple elegant dark */
+            --bg: #000000;
+            --panel: #1c1c1e;
+            --surface: #2c2c2e;
+            --paper: #2c2c2e;
+            --text: #f5f5f7;
+            --text-muted: #8e8e93;
+            --accent: #0a84ff;
+            --accent-warm: #ff9f0a;
+            --success: #30d158;
+            --border: #38383a;
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            --font-body: 'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --radius: 18px;
+        }
+
+        html.light {
+            /* Apple elegant light */
+            --bg: #f2f2f7;
+            --panel: #ffffff;
+            --surface: #ffffff;
+            --paper: #ffffff;
+            --text: #000000;
+            --text-muted: #6e6e73;
+            --accent: #007aff;
+            --accent-warm: #ff9500;
+            --success: #34c759;
+            --border: #c6c6c8;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            padding: 24px 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .instrument {
+            width: 100%;
+            max-width: 480px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px -12px rgba(0,0,0,0.35);
+        }
+
+        .instrument-header {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            padding: 12px 18px;
+            background: color-mix(in srgb, var(--panel) 95%, transparent);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 1px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .instrument-header .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--success);
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px rgba(48, 209, 88, 0.25);
+        }
+
+        .add-row {
+            padding: 16px 18px 14px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+        }
+
+        .add-input {
+            flex: 1;
+            font-family: var(--font-body);
+            font-size: 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 14px;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .add-input:focus {
+            border-color: var(--accent);
+        }
+
+        .add-btn {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            padding: 0 18px;
+            border-radius: 10px;
+            border: 1px solid var(--accent);
+            background: color-mix(in srgb, var(--surface) 70%, var(--accent) 18%);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .habits {
+            max-height: 380px;
+            overflow-y: auto;
+            background: var(--bg);
+        }
+
+        .habit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.1s ease;
+        }
+
+        .habit:last-child { border-bottom: none; }
+
+        .habit:hover {
+            background: color-mix(in srgb, var(--surface) 40%, transparent);
+        }
+
+        .check {
+            width: 26px;
+            height: 26px;
+            border: 1.5px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.1s ease;
+            color: transparent;
+        }
+
+        .check.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: #000;
+        }
+
+        .check i { font-size: 11px; }
+
+        .habit-name {
+            flex: 1;
+            font-size: 14.5px;
+            cursor: pointer;
+            padding: 2px 0;
+        }
+
+        .habit-name.editing {
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            padding: 2px 8px;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .streak {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 999px;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .dots {
+            display: flex;
+            gap: 3px;
+            margin-left: 6px;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: background 0.1s ease;
+        }
+
+        .dot.filled {
+            background: var(--success);
+        }
+
+        .del {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .del:hover {
+            color: #ff453a;
+            background: rgba(255,69,58,0.1);
+        }
+
+        .empty {
+            padding: 32px 18px;
+            text-align: center;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .footer-bar {
+            padding: 10px 18px;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .footer {
+            font-family: var(--font-mono);
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-align: center;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="instrument">
+        <div class="instrument-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="../index.html" title="DaityaAI Home"><img src="../diatya-ai-icon.svg" alt="DaityaAI" style="height: 28px; width: auto; vertical-align: middle;"></a>
+                <span><span style="color:var(--accent)">HABIT-05</span> / RECURSION RITUALS</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div class="status">
+                    <span class="status-dot"></span>
+                    <span>OPERATIONAL</span>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">LIGHT</button>
+            </div>
+        </div>
+
+        <div class="add-row">
+            <input id="add-input" class="add-input" type="text" placeholder="NEW RITUAL NAME..." maxlength="42">
+            <button id="add-btn" class="add-btn">ADD</button>
+        </div>
+
+        <div id="habits-list" class="habits"></div>
+
+        <div class="footer-bar">
+            <div><span id="total-habits">0</span> RITUALS</div>
+            <div>STREAKS PERSIST • TODAY IS KEY</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        DAITYA AI ACADEMY • SPECIMEN-05 • LEARN. BUILD. LAUNCH.
+    </div>
+
+    <script>
+        // === HABIT-05 Recursion Rituals ===
+        let habits = []; // {id, name, dates: string[] }
+
+        const listEl = document.getElementById('habits-list');
+        const addInput = document.getElementById('add-input');
+        const addBtn = document.getElementById('add-btn');
+        const totalEl = document.getElementById('total-habits');
+
+        function todayStr() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        function load() {
+            const raw = localStorage.getItem('daitya-habits');
+            if (raw) habits = JSON.parse(raw);
+            // prune very old dates? keep all for longest streak
+            render();
+        }
+
+        function save() {
+            localStorage.setItem('daitya-habits', JSON.stringify(habits));
+        }
+
+        function calcStreak(dates) {
+            if (!dates || !dates.length) return 0;
+            const set = new Set(dates);
+            let streak = 0;
+            let d = new Date();
+            for (let i = 0; i < 365; i++) {
+                const ds = d.toISOString().slice(0,10);
+                if (set.has(ds)) {
+                    streak++;
+                    d.setDate(d.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            return streak;
+        }
+
+        function calcLongest(dates) {
+            if (!dates || !dates.length) return 0;
+            const sorted = [...dates].sort();
+            let longest = 1, cur = 1;
+            for (let i = 1; i < sorted.length; i++) {
+                const prev = new Date(sorted[i-1]);
+                const curr = new Date(sorted[i]);
+                const diff = (curr - prev) / 86400000;
+                if (diff === 1) {
+                    cur++;
+                    longest = Math.max(longest, cur);
+                } else {
+                    cur = 1;
+                }
+            }
+            return longest;
+        }
+
+        function getLastNDays(n) {
+            const out = [];
+            let d = new Date();
+            for (let i = 0; i < n; i++) {
+                out.unshift(d.toISOString().slice(0,10));
+                d.setDate(d.getDate() - 1);
+            }
+            return out;
+        }
+
+        function render() {
+            listEl.innerHTML = '';
+            const today = todayStr();
+            const last14 = getLastNDays(14);
+
+            if (habits.length === 0) {
+                const e = document.createElement('div');
+                e.className = 'empty';
+                e.textContent = 'NO RITUALS YET. ADD ONE ABOVE.';
+                listEl.appendChild(e);
+                totalEl.textContent = '0';
+                return;
+            }
+
+            habits.forEach((h, idx) => {
+                const row = document.createElement('div');
+                row.className = 'habit';
+
+                const isDone = h.dates && h.dates.includes(today);
+
+                const chk = document.createElement('div');
+                chk.className = 'check' + (isDone ? ' checked' : '');
+                chk.innerHTML = isDone ? '<i class="fa-solid fa-check"></i>' : '';
+                chk.onclick = () => toggleToday(idx);
+
+                const name = document.createElement('div');
+                name.className = 'habit-name';
+                name.textContent = h.name;
+                name.onclick = () => beginEdit(idx, name);
+
+                const dots = document.createElement('div');
+                dots.className = 'dots';
+                last14.forEach(ds => {
+                    const d = document.createElement('div');
+                    d.className = 'dot' + ((h.dates || []).includes(ds) ? ' filled' : '');
+                    dots.appendChild(d);
+                });
+
+                const streakEl = document.createElement('div');
+                streakEl.className = 'streak';
+                const cur = calcStreak(h.dates);
+                const lng = calcLongest(h.dates);
+                streakEl.textContent = `${cur} / ${lng}`;
+
+                const del = document.createElement('div');
+                del.className = 'del';
+                del.innerHTML = '<i class="fa-solid fa-trash"></i>';
+                del.onclick = (ev) => { ev.stopPropagation(); deleteHabit(idx); };
+
+                row.appendChild(chk);
+                row.appendChild(name);
+                row.appendChild(dots);
+                row.appendChild(streakEl);
+                row.appendChild(del);
+
+                listEl.appendChild(row);
+            });
+
+            totalEl.textContent = habits.length;
+        }
+
+        function toggleToday(idx) {
+            const h = habits[idx];
+            const t = todayStr();
+            if (!h.dates) h.dates = [];
+            if (h.dates.includes(t)) {
+                h.dates = h.dates.filter(d => d !== t);
+            } else {
+                h.dates.push(t);
+                // keep sorted
+                h.dates.sort();
+            }
+            save();
+            render();
+        }
+
+        function beginEdit(idx, el) {
+            const h = habits[idx];
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = h.name;
+            input.className = 'habit-name editing';
+            input.style.width = '100%';
+            el.replaceWith(input);
+            input.focus();
+            input.select();
+
+            const commit = () => {
+                const val = input.value.trim();
+                if (val && val.length > 0) {
+                    h.name = val.slice(0, 42);
+                    save();
+                }
+                render();
+            };
+
+            input.onblur = commit;
+            input.onkeydown = (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); commit(); }
+                if (e.key === 'Escape') { render(); }
+            };
+        }
+
+        function addHabit() {
+            const name = addInput.value.trim();
+            if (!name) return;
+            habits.unshift({ id: Date.now(), name: name.slice(0,42), dates: [] });
+            addInput.value = '';
+            save();
+            render();
+            // focus first check of new
+            setTimeout(() => {
+                const first = listEl.querySelector('.check');
+                if (first) first.scrollIntoView({block:'center'});
+            }, 40);
+        }
+
+        function deleteHabit(idx) {
+            if (!confirm('Remove this ritual?')) return;
+            habits.splice(idx, 1);
+            save();
+            render();
+        }
+
+        function setupAdd() {
+            addBtn.onclick = addHabit;
+            addInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') addHabit();
+            });
+
+            // keyboard focus hint
+            document.addEventListener('keydown', (e) => {
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    addInput.focus();
+                }
+            });
+        }
+
+        // Theme
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (theme === 'light') {
+                html.classList.add('light');
+                if (btn) btn.textContent = 'DARK';
+            } else {
+                html.classList.remove('light');
+                if (btn) btn.textContent = 'LIGHT';
+            }
+            localStorage.setItem('daitya-theme', theme);
+        }
+
+        function initTheme() {
+            const btn = document.getElementById('theme-toggle');
+            let saved = localStorage.getItem('daitya-theme');
+            if (!saved) {
+                saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+            applyTheme(saved);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('light');
+                    applyTheme(isLight ? 'dark' : 'light');
+                });
+            }
+        }
+
+        function init() {
+            initTheme();
+            load();
+            setupAdd();
+
+            // seed two example habits on first run if empty
+            if (habits.length === 0 && !localStorage.getItem('daitya-habits-seeded')) {
+                const t = todayStr();
+                const yest = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+                habits = [
+                    { id: 1, name: "Morning movement", dates: [t, yest] },
+                    { id: 2, name: "Read 20 pages", dates: [t] }
+                ];
+                localStorage.setItem('daitya-habits-seeded', '1');
+                save();
+                render();
+            }
+
+            console.log('%c[HABIT-05] Recursion Rituals online.', 'color:#52525b');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
